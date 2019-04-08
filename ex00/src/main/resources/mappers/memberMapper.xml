@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- namespace는 클래스의 패키지와 유사한 용도로, Mybatis내에서 원하는 SQL문을 찾아서 실행 할 때 사용 -->
+<mapper namespace="org.zerock.mapper.MemberMapper">
+	<select id="getTime" resultType="string">
+	select now()
+	</select>
+	
+	<insert id="insertMember">
+	insert into tbl_member (userid, userpw, username, email)
+	<!-- ${vo내부의 필드 이름}을 이용해 vo의 필드 값을 가져오는 것이 가능 -->
+	values (#{userid}, #{userpw}, #{username}, #{email})
+	</insert>
+</mapper>
