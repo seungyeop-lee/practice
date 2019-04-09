@@ -1,5 +1,8 @@
 package org.zerock.persistence;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import javax.inject.Inject;
 
 import org.apache.ibatis.session.SqlSession;
@@ -24,5 +27,21 @@ public class MemberDAOImpl implements MemberDAO {
 	public void insertMember(MemberVO vo) {
 		sqlSession.insert(namespace + ".insertMember", vo);
 	}
-
+	
+	@Override
+	public MemberVO readMember(String userid) throws Exception {
+		return sqlSession.selectOne(namespace + ".selectMember", userid);
+	}
+	
+	@Override
+	public MemberVO readWithPW(String userid, String userpw) throws Exception {
+		Map<String, Object> paramMap = new HashMap<>();
+		
+		paramMap.put("userid", userid);
+		paramMap.put("userpw", userpw);
+		
+		//Map으로 전달 할 경우 Mapper.xml에서 #{}으로 값의 접근이 가능하다.
+		return sqlSession.selectOne(namespace + ".readWithPW", paramMap);
+	}
+	
 }
