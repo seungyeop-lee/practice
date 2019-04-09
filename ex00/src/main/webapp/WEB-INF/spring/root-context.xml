@@ -32,4 +32,8 @@
 		<constructor-arg name="sqlSessionFactory" ref="sqlSessionFactory" />
 	</bean>
 	
+	<!-- org.zerock.persistence패키지에 어노테이션이 설정되있는 클래스를 빈으로 등록 -->
+	<context:component-scan base-package="org.zerock.persistence">
+	</context:component-scan>
+	
 </beans>
