@@ -59,4 +59,16 @@ public class BoardController {
 		model.addAttribute(service.read(bno));
 		
 	}
+	
+	@RequestMapping(value = "/remove", method = RequestMethod.POST)
+	public String remove(@RequestParam("bno") int bno, RedirectAttributes rttr) throws Exception {
+		
+		service.remove(bno);
+		
+		//redirect시 1회용으로 속성을 넘겨줄 때 사용
+		rttr.addFlashAttribute("msg", "SUCCESS");
+		
+		return "redirect:/board/listAll";
+		
+	}
 }
