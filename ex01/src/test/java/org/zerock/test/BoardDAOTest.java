@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.zerock.domain.BoardVO;
+import org.zerock.domain.Criteria;
 import org.zerock.persistence.BoardDAO;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -60,5 +61,20 @@ public class BoardDAOTest {
 		for(BoardVO boardVO : list) {
 			logger.info(boardVO.getBno() + ":" + boardVO.getTitle());
 		}
+	}
+	
+	@Test
+	public void testListCriteria() throws Exception {
+		
+		Criteria cri = new Criteria();
+		cri.setPage(2);
+		cri.setPerPageNum(20);
+		
+		List<BoardVO> list = dao.listCriteria(cri);
+		
+		for(BoardVO boardVO : list) {
+			logger.info(boardVO.getBno() + ":" + boardVO.getTitle());
+		}	//select * from tbl_board where bno > 0 order by bno desc limit 20,20; 실행결과와 콘솔로그를 비교하여 확인
+		
 	}
 }

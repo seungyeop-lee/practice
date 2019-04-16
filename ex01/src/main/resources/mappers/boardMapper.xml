@@ -47,4 +47,14 @@
 		limit #{page}, 10
 	]]>
 	</select>
+	
+	<select id="listCriteria" resultType="BoardVO">
+	<![CDATA[
+		select bno, title, content, writer, regdate, viewcnt
+		from tbl_board
+		where bno > 0
+		order by bno desc, regdate desc
+		limit #{pageStart}, #{perPageNum}
+	]]>
+	</select>
 </mapper>
