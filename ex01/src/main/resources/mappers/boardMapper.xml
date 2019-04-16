@@ -35,4 +35,16 @@
 		order by bno desc, regdate desc
 	]]>
 	</select>
+	
+	<select id="listPage" resultType="BoardVO">
+	<!-- desc는 내림차순 -->
+	<!-- limit x, y는 x index부터 y개 만큼이라는 의미 -->
+	<![CDATA[
+		select bno, title, content, writer, regdate, viewcnt
+		from tbl_board
+		where bno > 0
+		order by bno desc, regdate desc
+		limit #{page}, 10
+	]]>
+	</select>
 </mapper>

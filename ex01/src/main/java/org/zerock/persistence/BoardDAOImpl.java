@@ -41,4 +41,17 @@ public class BoardDAOImpl implements BoardDAO {
 		return session.selectList(namespace + ".listAll");
 	}
 	
+	@Override
+	public List<BoardVO> listPage(int page) throws Exception {
+		
+		if(page <= 0) {
+			page = 1;
+		}
+		
+		//페이지 시작 게시물 순번을 다시 page변수에 저장하는게 마음에 들지 않음!
+		page = (page - 1) * 10;
+		
+		return session.selectList(namespace + ".listPage", page);
+		
+	}
 }
