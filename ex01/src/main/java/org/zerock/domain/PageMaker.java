@@ -1,5 +1,8 @@
 package org.zerock.domain;
 
+import org.springframework.web.util.UriComponents;
+import org.springframework.web.util.UriComponentsBuilder;
+
 public class PageMaker {
 	
 	private int totalCount;	//전체 게시물의 수
@@ -39,6 +42,16 @@ public class PageMaker {
 		prev = startPage == 1 ? false : true;
 		//(끝 페이지 * 한 페이지 당 보여줄 게시물 수) >= 전체 게시물수 이변 이후 페이지 링크 무효화
 		next = endPage * cri.getPerPageNum() >= totalCount ? false : true;
+	}
+	
+	public String makeQuery(int page) {
+		
+		UriComponents uriComponents = UriComponentsBuilder.newInstance()
+				.queryParam("page", page)
+				.queryParam("perPageNum", cri.getPerPageNum())
+				.build();
+		
+		return uriComponents.toUriString();
 	}
 
 	public int getStartPage() {

@@ -19,7 +19,7 @@
 	<c:forEach items="${list}" var="boardVO">
 		<tr>
 			<td>${boardVO.bno}</td>
-			<td><a href='/board/read?bno=${boardVO.bno}'>${boardVO.title}</a></td>
+			<td><a href='/board/readPage${pageMaker.makeQuery(pageMaker.cri.page)}&bno=${boardVO.bno}'>${boardVO.title}</a></td>
 			<td>${boardVO.writer}</td>
 			<td><fmt:formatDate pattern="yyyy-MM-dd HH:mm" value="${boardVO.regdate}" /></td>
 			<td><span class="badge bg-red">${boardVO.viewcnt}</span></td>
@@ -29,16 +29,23 @@
 	<div class="text-center">
 		<ul class="pagination">
 			<c:if test="${pageMaker.prev}">
-				<li><a href="listPage?page=${pageMaker.startPage - 1}">&laquo;</a></li>
+				<li><a href="${pageMaker.startPage - 1}">&laquo;</a></li>
 			</c:if>
 			
 			<c:forEach begin="${pageMaker.startPage}" end="${pageMaker.endPage}" var="idx">
-				<li <c:out value="${pageMaker.cri.page == idx ? 'class=active' : '' }" />><a href="listPage?page=${idx}">${idx}</a></li>
+				<li <c:out value="${pageMaker.cri.page == idx ? 'class=active' : '' }" />>
+					<a href="${idx}">${idx}</a>
+				</li>
 			</c:forEach>
 			
 			<c:if test="${pageMaker.next && pageMaker.endPage > 0}">
-				<li><a href="listPage?page=${pageMaker.endPage + 1}">&raquo;</a></li>
+				<li><a href="${pageMaker.endPage + 1}">&raquo;</a></li>
 			</c:if>
+			
+			<form id="jobForm">
+				<input type="hidden" name="page" />
+				<input type="hidden" name="perPageNum" value="${pageMaker.cri.perPageNum}" />
+			</form>
 		</ul>
 	</div>
 </html>
@@ -49,6 +56,22 @@
 	if(result == 'SUCCESS') {
 		alert("처리가 완료되었습니다.");
 	}
+	
+	$(".pagination li a").on("click", function(event) {
+		
+		//디폴트 이벤트의 실행을 막는다.
+		event.preventDefault();
+		
+		//클릭된 태그의 href속성 값을 불러온다.
+		var targetPage = $(this).attr("href");
+		
+		//페이징과 관련된 정보를 form을 통해 서버에 전달한다.
+		var jobForm = $("#jobForm");
+		jobForm.find("[name='page']").val(targetPage);
+		jobForm.attr("action", "/board/listPage").attr("method", "get");
+		jobForm.submit();
+		
+	});
 </script>
 
 <%@ include file="../include/footer.jsp" %>
