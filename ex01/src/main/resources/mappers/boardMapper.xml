@@ -65,4 +65,51 @@
 		where bno > 0
 	]]>
 	</select>
+	
+	<sql id="search">	<!-- sql태그로 재사용 가능 한 쿼리 조각 저장가능 -->
+		<if test="searchType != null">
+			<if test="searchType == 't'.toString()">
+				and title like CONCAT('%', #{keyword}, '%') <!-- %는 1개 이상의 문자열 -->
+			</if>
+			<if test="searchType == 'c'.toString()">
+				and content like CONCAT('%', #{keyword}, '%')
+			</if>
+			<if test="searchType == 'w'.toString()">
+				and writer like CONCAT('%', #{keyword}, '%')
+			</if>
+			<if test="searchType == 'tc'.toString()">
+				and (title like CONCAT('%', #{keyword}, '%') OR content like CONCAT('%', #{keyword}, '%'))
+			</if>
+			<if test="searchType == 'cw'.toString()">
+				and (content like CONCAT('%', #{keyword}, '%') OR writer like CONCAT('%', #{keyword}, '%'))
+			</if>
+			<if test="searchType == 'tcw'.toString()">
+				and (title like CONCAT('%', #{keyword}, '%') OR
+					content like CONCAT('%', #{keyword}, '%') OR
+					and writer like CONCAT('%', #{keyword}, '%'))
+			</if>
+		</if>
+	</sql>
+	
+	<select id="listSearch" resultType="BoardVO">
+	<![CDATA[
+		select *
+		from tbl_board
+		where bno > 0
+	]]>
+		<include refid="search"></include>	<!-- include태그로 sql태그의 쿼리 조각 사용가능 -->
+	<![CDATA[
+		order by bno desc
+		limit #{pageStart}, #{perPageNum}
+	]]>
+	</select>
+	
+	<select id="listSearchCount" resultType="int">
+	<![CDATA[
+		select count(bno)
+		from tbl_board
+		where bno > 0
+	]]>
+		<include refid="search"></include>
+	</select>
 </mapper>
