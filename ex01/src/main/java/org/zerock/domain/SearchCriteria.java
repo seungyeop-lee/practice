@@ -1,6 +1,4 @@
-package org.zerock.controller;
-
-import org.zerock.domain.Criteria;
+package org.zerock.domain;
 
 public class SearchCriteria extends Criteria {
 

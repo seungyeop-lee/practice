@@ -7,7 +7,6 @@ import javax.sound.sampled.AudioFormat.Encoding;
 
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
-import org.zerock.controller.SearchCriteria;
 
 public class PageMaker {
 	
