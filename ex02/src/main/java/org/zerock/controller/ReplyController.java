@@ -53,4 +53,24 @@ public class ReplyController {
 		
 	}
 	
+	//전체 수정일 경우 PUT, 부분 수정일 경우 PATCH를 사용하는 것이 일반적
+	@RequestMapping(value = "/{rno}", method = {RequestMethod.PUT, RequestMethod.PATCH})
+	public ResponseEntity<String> update(@PathVariable("rno") Integer rno, @RequestBody ReplyVO vo) {
+		
+		ResponseEntity<String> entity = null;
+		
+		try {
+			vo.setRno(rno);
+			service.modifyReply(vo);
+			
+			entity = new ResponseEntity<>("SUCCESS", HttpStatus.OK);
+		} catch (Exception e) {
+			e.printStackTrace();
+			entity = new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+		}
+		
+		return entity;
+		
+	}
+	
 }
