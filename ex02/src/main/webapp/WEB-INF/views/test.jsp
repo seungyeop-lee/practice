@@ -8,6 +8,17 @@
 </head>
 <body>
 	<h2>Ajax Test Page</h2>
+	
+	<div>
+		<div>
+			REPLYER <input type="text" name="replyer" id="newReplyWriter">
+		</div>
+		<div>
+			REPLY TEXT <input type="text" name="replytext" id="newReplyText">
+		</div>
+		<button id="replyAddBtn">ADD REPLY</button>
+	</div>
+	
 	<ul id="replies">
 	</ul>
 	
@@ -35,6 +46,33 @@
 				
 			});
 		}
+		
+		$("#replyAddBtn").on("click", function() {
+			
+			var replyer = $("#newReplyWriter").val();
+			var replytext = $("#newReplyText").val();
+			
+			$.ajax({	//$.post를 사용 할 경우 서버에 보내는 데이터 형식이 form을 사용하였을 때와 동일하여 오작동
+				type: "post",
+				url: "/replies",
+				headers: {
+					"Content-Type":"application/json",
+					"X-HTTP-Method-Override":"POST"
+				},
+				dataType: "text",
+				data: JSON.stringify({
+					bno: bno,
+					replyer: replyer,
+					replytext: replytext
+				}),
+				success: function(result) {
+					if(result == "SUCCESS") {
+						alert("등록 되었습니다.");
+						getAllList();
+					}
+				}
+			});
+		});
 	</script>
 	
 </body>
