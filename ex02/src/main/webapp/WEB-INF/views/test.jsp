@@ -5,6 +5,20 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
+<style type="text/css">
+#modDiv {
+	width: 300px;
+	height: 100px;
+	background-color: gray;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	margin-top: -50px;
+	margin-left: -150px;
+	padding: 10px;
+	z-index: 1000;
+}
+</style>
 </head>
 <body>
 	<h2>Ajax Test Page</h2>
@@ -21,6 +35,18 @@
 	
 	<ul id="replies">
 	</ul>
+	
+	<div id="modDiv" style="display: none;">
+		<div class="modal-title"></div>
+		<div>
+			<input type="text" id="replytext">
+		</div>
+		<div>
+			<button type="button" id="replyModBtn">Modify</button>
+			<button type="button" id="replyDelBtn">DELETE</button>
+			<button type="button" id="closeBtn">Close</button>
+		</div>
+	</div>
 	
 	<script type="text/javascript" src="/resources/plugins/jQuery/jQuery-2.1.4.min.js"></script>
 	
@@ -39,13 +65,15 @@
 					//id나 name속성을 대신해서 사용하기가 용이
 					str += "<li data-rno='" + this.rno + "' class='replyLi'>"
 						+ this.rno + " : " + this.replytext
-						+ "</li>";
+						+ "<button>MOD</button></li>";
 				});
 				
 				$("#replies").html(str);
 				
 			});
 		}
+		
+		getAllList();
 		
 		$("#replyAddBtn").on("click", function() {
 			
@@ -68,6 +96,72 @@
 				success: function(result) {
 					if(result == "SUCCESS") {
 						alert("등록 되었습니다.");
+						getAllList();
+					}
+				}
+			});
+		});
+		
+		//ul태그 내부에서 click이벤트가 발생하였을 때
+		//이벤트 발생장소가 정확히 replyLi 클래스 내부에 button태그일 경우 handler가 실행 됨 
+		$("#replies").on("click", ".replyLi button", function() {
+			
+			var reply = $(this).parent();	//버튼의 부모. 즉 li태그
+			
+			var rno = reply.attr("data-rno");
+			var replytext = reply.text();
+			
+			$(".modal-title").html(rno);
+			$("#replytext").val(replytext);
+			$("#modDiv").show("slow");	//display: none이었던 부분이 애니메이션과 함께 표시 됨
+			
+		});
+		
+		$("#replyDelBtn").on("click", function() {
+			
+			var rno = $(".modal-title").html();
+			var replytext = $("#replytext").val();
+			
+			$.ajax({
+				type: "delete",
+				url: "/replies/" + rno,
+				headers: {
+					"Content-Type":"application/json",
+					"X-HTTP-Method-Override":"DELETE"	//옛날 브라우저 대응 (GET과 POST방식만 있으므로 헤더로 메소드를 알려줌)
+				},
+				dataType: "text",
+				success: function(result) {
+					console.log("result: " + result);
+					if(result == "SUCCESS") {
+						alert("삭제 되었습니다.");
+						$("#modDiv").hide("slow");	//서서히 사라져서 disply: none 상태가 됨
+						getAllList();
+					}
+				}
+			});
+		});
+		
+		$("#replyModBtn").on("click", function() {
+			
+			var rno = $(".modal-title").html();
+			var replytext = $("#replytext").val();
+			
+			$.ajax({
+				type: "put",
+				url: "/replies/" + rno,
+				headers: {
+					"Content-Type":"application/json",
+					"X-HTTP-Method-Override":"PUT"
+				},
+				dataType: "text",
+				data: JSON.stringify({
+					replytext: replytext
+				}),
+				success: function(result) {
+					console.log("result: " + result);
+					if(result == "SUCCESS") {
+						alert("수정 되었습니다.");
+						$("#modDiv").hide("slow");
 						getAllList();
 					}
 				}
