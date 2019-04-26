@@ -5,6 +5,8 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
+<link href="/resources/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+<link href="/resources/dist/css/AdminLTE.min.css" rel="stylesheet" type="text/css" />
 <style type="text/css">
 #modDiv {
 	width: 300px;
@@ -35,6 +37,8 @@
 	
 	<ul id="replies">
 	</ul>
+	<ul class="pagination">
+	</ul>
 	
 	<div id="modDiv" style="display: none;">
 		<div class="modal-title"></div>
@@ -52,6 +56,59 @@
 	
 	<script type="text/javascript">
 		var bno = 5;
+		var replyPage = 1;
+		
+		getPageList(1);
+		
+		//전체 댓글 + 페이징 갱신 함수
+		function getPageList(page) {
+			$.getJSON("/replies/" + bno + "/" + page, function(data) {
+				
+				console.log(data.list.length);
+				var str = "";
+				
+				$(data.list).each(function() {
+					str += "<li data-rno='" + this.rno + "' class='replyLi'>"
+						+ this.rno + " : " + this.replytext
+						+ "<button>MOD</button></li>";
+				});
+				
+				$("#replies").html(str);
+				
+				printPaging(data.pageMaker);
+				
+			});
+		}
+		
+		//댓글의 페이징 생성 함수
+		function printPaging(pageMaker) {
+			
+			var str = "";
+			
+			if(pageMaker.prev) {
+				str += "<li><a href='" + (pageMaker.startPage - 1) + "'> << </a></li>";
+			}
+			
+			for(var i = pageMaker.startPage, len = pageMaker.endPage; i <= len; i++) {
+				var strClass = pageMaker.cri.page == i ? 'class=active':'';	//현재 페이지에 해당하면 active 클래스를 부여
+				str += "<li " + strClass + "><a href='" + i + "'>" + i + "</a></li>";
+			}
+			
+			if(pageMaker.next) {
+				str += "<li><a href='" + (pageMaker.endPage + 1) + "'> >> </a></li>"
+			}
+			
+			$('.pagination').html(str);
+		}
+		
+		$(".pagination").on("click", "li a", function(event) {
+			
+			event.preventDefault();	//<a>태그의 디폴트 이벤트를 억제
+			
+			replyPage = $(this).attr("href");
+			
+			getPageList(replyPage);
+		});
 		
 		//전체 댓글 목록 갱신 함수
 		function getAllList() {
@@ -72,8 +129,6 @@
 				
 			});
 		}
-		
-		getAllList();
 		
 		$("#replyAddBtn").on("click", function() {
 			
@@ -96,7 +151,7 @@
 				success: function(result) {
 					if(result == "SUCCESS") {
 						alert("등록 되었습니다.");
-						getAllList();
+						getPageList(replyPage);
 					}
 				}
 			});
@@ -135,7 +190,7 @@
 					if(result == "SUCCESS") {
 						alert("삭제 되었습니다.");
 						$("#modDiv").hide("slow");	//서서히 사라져서 disply: none 상태가 됨
-						getAllList();
+						getPageList(replyPage);
 					}
 				}
 			});
@@ -162,7 +217,7 @@
 					if(result == "SUCCESS") {
 						alert("수정 되었습니다.");
 						$("#modDiv").hide("slow");
-						getAllList();
+						getPageList(replyPage);
 					}
 				}
 			});
