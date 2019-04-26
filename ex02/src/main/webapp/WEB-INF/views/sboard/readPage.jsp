@@ -27,6 +27,40 @@
 		<button type="submit" class="btn btn-primary goListBtn">LIST ALL</button>
 	</div>
 	
+	<div class="row">	<!-- 댓글 등록 부분 -->
+		<div class="col-md-12">
+			<div class="box box-success">
+				<div class="box-header">
+					<h3 class="box-title">ADD NEW REPLY</h3>
+				</div>
+				<div class="box-body">
+					<label for="newReplyWriter">Writer</label>
+					<input class="form-control" type="text" placeholder="USER ID" id="newReplyWriter">
+					<label for="newReplyText">ReplyText</label>
+					<input class="form-control" type="text" placeholder="REPLY TEXT" id="newReplyText">
+				</div>
+				<div class="box-footer">
+					<button type="submit" class="btn btn-primary" id="replyAddBtn">ADD REPLY</button>
+				</div>
+			</div>
+			<!-- /.box-body -->
+		</div>
+	</div>
+	
+	<div class="row col-md-12">	<!-- 댓글 목록 및 페이징 부분 -->
+		<!-- The time line -->
+		<ul class="timeline">
+			<li class="time-label" id="repliesDiv">
+				<span class="bg-green">Replies List</span>
+			</li>
+		</ul>
+		
+		<div class="text-center">
+			<ul id="pagination" class="pagination pagination-sm no-margin">
+			</ul>
+		</div>
+	</div>
+	
 	<script type="text/javascript">
 	$(document).ready(function() {
 		var formObj = $('form[role="form"]');
