@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title></title>
+</head>
+<body>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/3.0.6/handlebars.js"></script>
+
+<div id="displayDiv">
+
+</div>
+
+<script>
+	var source = "<h1><p>{{name}}</p> <p>{{userid}}</p> <p>{{addr}}</p></h1>";
+	var template = Handlebars.compile(source);	//source를 기준으로 템플레이트를 생성
+	var data = {name:"홍길동", userid:"user00", addr:"조선 한양"};
+	
+	$("#displayDiv").html(template(data));	//템플레이트의 변수 공간을 채울 데이터를 넣어서 화면에 뿌려줌
+</script>
+
+</body>
+</html>
