@@ -32,7 +32,11 @@
 	
 	<context:component-scan base-package="org.zerock.persistence" />
 	<context:component-scan base-package="org.zerock.service" />
+	<context:component-scan base-package="org.zerock.aop" />
 	
 	<!-- Proxy 객체 자동 생성 -->
 	<aop:aspectj-autoproxy></aop:aspectj-autoproxy>
+	
+	<!-- xml에서 aop기능 설정을 할 때 사용  -->
+	<aop:config></aop:config>
 </beans>
