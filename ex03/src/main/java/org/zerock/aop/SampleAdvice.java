@@ -20,7 +20,7 @@ public class SampleAdvice {
 	//지정된 메소드의 실행 전에 이 메소드가 실행 됨
 	//메소드 지정은 pointcut을 지정하는 문법으로 AspectJ언어의 문법
 	//org.zerock.service.MessageService로 시작하는 모든 클래스의 모든 메소드를 지정
-//	@Before("execution(* org.zerock.service.MessageService*.*(..))")	
+	@Before("execution(* org.zerock.service.MessageService*.*(..))")	
 	public void startLog(JoinPoint jp) {
 		
 		logger.info("-----------------------");
@@ -40,7 +40,7 @@ public class SampleAdvice {
 	}
 	
 	//지정된 메소드의 실행 전에 이 메소드가 실행 됨
-//	@Around("execution(* org.zerock.service.MessageService*.*(..))")
+	@Around("execution(* org.zerock.service.MessageService*.*(..))")
 	public Object timeLog(ProceedingJoinPoint pjp) throws Throwable {
 		
 		long startTime = System.currentTimeMillis();
