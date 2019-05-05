@@ -52,7 +52,9 @@
 		<!-- The time line -->
 		<ul class="timeline">
 			<li class="time-label" id="repliesDiv">
-				<span class="bg-green">Replies List</span>
+				<span class="bg-green">
+					Replies List <small id="replycntSmall"> [ ${boardVO.replycnt} ] </small>
+				</span>
 			</li>
 			<script id="template" type="text/x-handlebars-template">
 			{{#each .}}
@@ -175,6 +177,7 @@
 			printPaging(data.pageMaker, $(".pagination"));	//댓글 페이징 부분 rendering
 			
 			$("#modifyModal").modal('hide');
+			$("#replycntSmall").html("[ " + data.pageMaker.totalCount +" ]");
 		});
 	}
 	

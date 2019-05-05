@@ -21,3 +21,5 @@ foreign key (targetid) references tbl_user (uid);
 
 alter table tbl_message add constraint fk_usersender
 foreign key (sender) references tbl_user (uid);
+
+alter table tbl_board add column replycnt int default 0;
