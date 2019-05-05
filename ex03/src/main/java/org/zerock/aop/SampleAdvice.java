@@ -3,6 +3,8 @@ package org.zerock.aop;
 import java.util.Arrays;
 
 import org.aspectj.lang.JoinPoint;
+import org.aspectj.lang.ProceedingJoinPoint;
+import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.slf4j.Logger;
@@ -35,6 +37,22 @@ public class SampleAdvice {
 //		logger.info(jp.getTarget().getClass().getTypeName());
 		//Advice를 행하는 객체의 type이름을 출력
 //		logger.info(jp.getThis().getClass().getTypeName());
+	}
+	
+	//지정된 메소드의 실행 전에 이 메소드가 실행 됨
+	@Around("execution(* org.zerock.service.MessageService*.*(..))")
+	public Object timeLog(ProceedingJoinPoint pjp) throws Throwable {
+		
+		long startTime = System.currentTimeMillis();
+		logger.info(Arrays.toString(pjp.getArgs()));
+		
+		Object result = pjp.proceed();	//target메소드를 직접 실행 해 주어야 한다.
+		
+		long endTime = System.currentTimeMillis();
+		logger.info(pjp.getSignature().getName() + " : " + (endTime - startTime));
+		logger.info("================================");
+		
+		return result;	//target메소드의 결과를 반환
 	}
 	
 }
