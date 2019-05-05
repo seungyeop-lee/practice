@@ -62,10 +62,12 @@ small {
 					if(checkImageType(data)) {
 						str = "<div>"
 								+ "<a href='displayFile?fileName=" + getImageLink(data) + "'>"
-								+ "<img src='displayFile?fileName=" + data + "'/>" + getImageLink(data) + "</a></div>";
+								+ "<img src='displayFile?fileName=" + data + "'/></a>"
+								+ "<small data-src="+ data +">X</small></div>";
 					} else {
 						str = "<div><a href='displayFile?fileName=" + data + "'>"
-								+ getOriginalName(data) + "</a></div>";
+								+ getOriginalName(data) + "</a>"
+								+ "<small data-src="+ data +">X</small></div>";
 					}
 					$(".uploadedList").append(str);
 				}
