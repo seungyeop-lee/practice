@@ -54,10 +54,51 @@ small {
 				contentType: false,	//기본값이 application / x-www-form-urlencoded이므로 false사용
 				type: "POST",
 				success: function(data) {
-					alert(data);
+					var str = "";
+					
+					console.log(data);
+					console.log(checkImageType(data));
+					
+					if(checkImageType(data)) {
+						str = "<div>"
+								+ "<a href='displayFile?fileName=" + getImageLink(data) + "'>"
+								+ "<img src='displayFile?fileName=" + data + "'/>" + getImageLink(data) + "</a></div>";
+					} else {
+						str = "<div><a href='displayFile?fileName=" + data + "'>"
+								+ getOriginalName(data) + "</a></div>";
+					}
+					$(".uploadedList").append(str);
 				}
 			});
 		});
+		
+		function checkImageType(fileName) {
+			var pattern = /jpg|gif|png|jpeg/i;	//확장자 패턴 정규표현식, i는 대소문자 구분 없음을 의미
+			
+			return fileName.match(pattern);
+		}
+		
+		//저장된 파일 이름에서 저장 시 지정한 파일이름을 추출하여 반환
+		function getOriginalName(fileName) {
+			if(checkImageType(fileName)) {
+				return;
+			}
+			
+			var idx = fileName.indexOf("_") + 1;
+			return fileName.substr(idx);
+		}
+		
+		//썸네일 파일 이름에서 저장된 원본파일 이름을 추출하여 반환
+		function getImageLink(fileName) {
+			if(!checkImageType(fileName)) {
+				return;
+			}
+			
+			var front = fileName.substr(0, 12);
+			var end = fileName.substr(14);
+			
+			return front + end;
+		}
 	</script>
 
 </body>
