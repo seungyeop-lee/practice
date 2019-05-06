@@ -120,4 +120,9 @@
 	<update id="updateViewCnt">
 		update tbl_board set viewcnt = viewcnt + 1 where bno = #{bno}
 	</update>
+	
+	<insert id="addAttach">
+		<!-- LAST_INSERT_ID()로 직전에 생성된 데이터의 PK를 알아 낼 수 있다. -->
+		insert into tbl_attach(fullname, bno) values (#{fullName}, LAST_INSERT_ID())
+	</insert>
 </mapper>

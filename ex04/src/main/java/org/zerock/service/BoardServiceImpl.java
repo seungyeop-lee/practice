@@ -18,9 +18,20 @@ public class BoardServiceImpl implements BoardService{
 	@Inject
 	private BoardDAO dao;
 
+	@Transactional
 	@Override
 	public void regist(BoardVO board) throws Exception {
+		
 		dao.create(board);
+		
+		String[] files = board.getFiles();
+		if(files == null) {
+			return;
+		}
+		
+		for(String fileName : files) {
+			dao.addAttach(fileName);
+		}
 	}
 
 	//다른 연결이 commit하지 않은 데이터는 보지 못하게 함
