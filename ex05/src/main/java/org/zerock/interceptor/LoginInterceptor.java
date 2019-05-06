@@ -2,6 +2,7 @@ package org.zerock.interceptor;
 
 import org.slf4j.LoggerFactory;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -28,8 +29,16 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
 		if(userVO != null) {
 			logger.info("new login success");
 			session.setAttribute(LOGIN, userVO);
-//			response.sendRedirect("/");
 			
+			if(request.getParameter("useCookie") != null) {
+				logger.info("remember me..........");
+				Cookie loginCookie = new Cookie("loginCookie", session.getId());
+				loginCookie.setPath("/");	//지정된 경로 및 그 하위경로의 요청에 대해서만 쿠키를 전송
+				loginCookie.setMaxAge(60 * 60 * 24 * 7);
+				response.addCookie(loginCookie);
+			}
+			
+//			response.sendRedirect("/");
 			Object dest = session.getAttribute("dest");
 			response.sendRedirect(dest != null ? (String)dest : "/");
 		}
