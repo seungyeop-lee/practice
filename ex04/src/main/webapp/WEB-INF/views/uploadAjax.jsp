@@ -74,6 +74,22 @@ small {
 			});
 		});
 		
+		$(".uploadedList").on("click", "small", function(event) {
+			var that = $(this);
+			
+			$.ajax({
+				url: "/deleteFile",
+				type: "post",
+				data: {fileName: $(this).attr("data-src")},
+				dataType: "text",
+				success: function(result) {
+					if(result == 'deleted') {
+						that.parent("div").remove();
+					}
+				}
+			});
+		});
+		
 		function checkImageType(fileName) {
 			var pattern = /jpg|gif|png|jpeg/i;	//확장자 패턴 정규표현식, i는 대소문자 구분 없음을 의미
 			
