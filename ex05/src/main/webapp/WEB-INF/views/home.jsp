@@ -1,5 +1,5 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<%@ page session="false" %>
+<%@ page session="true" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 
 <%@ include file="include/header.jsp" %>
@@ -11,6 +11,7 @@
 			<div class="box">
 				<div class="box-header with-boarder">
 					<h3 class="box-title">HOME PAGE</h3>
+					<h3 class="box-content">${result}</h3>
 				</div>
 			</div>
 		</div> <!-- /.col (left) -->
