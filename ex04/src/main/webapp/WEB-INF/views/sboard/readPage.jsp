@@ -23,6 +23,7 @@
 	</div> <!-- /.box-body -->
 	
 	<div class="box-footer">
+		<ul class="mailbox-attachments clearfix uploadedList"></ul>
 		<button type="submit" class="btn btn-warning modifyBtn">MODIFY</button>
 		<button type="submit" class="btn btn-danger removeBtn">REMOVE</button>
 		<button type="submit" class="btn btn-primary goListBtn">LIST ALL</button>
@@ -102,6 +103,11 @@
 		</div>
 	</div>
 	
+	<div class="popup back" style="display:none;"></div>
+	<div id="popup_front" class="popup front" style="display:none;">
+		<img id="popup_img">
+	</div>
+	
 	<script type="text/javascript">
 	$(document).ready(function() {
 		var formObj = $('form[role="form"]');
@@ -135,9 +141,49 @@
 		<input type="hidden" name="keyword" value="${cri.keyword}" />
 	</form>
 	
+	<script id="templateAttach" type="text/x-handlebars-template">
+	<li data-src='{{fullName}}'>
+		<span class="mailbox-attachment-icon has-img"><img src="{{imgsrc}}" alt="Attachment"></span>
+		<div class="mailbox-attachment-info">
+			<a href="{{getLink}}" class="mailbox-attachment-name">{{fileName}}</a>
+		</div>
+	</li>
+	</script>
+	
+	<script src="/resources/js/upload.js"></script>
 	<script>
 	
 	var bno = ${boardVO.bno};
+	var templateAttach = Handlebars.compile($('#templateAttach').html());
+	
+	$.getJSON("/sboard/getAttach/" + bno, function(list) {
+		$(list).each(function() {
+			var fileInfo = getFileInfo(this);
+			var html = templateAttach(fileInfo);
+			$(".uploadedList").append(html);
+		});
+	});
+	
+	$(".uploadedList").on("click", ".mailbox-attachment-info a", function(event) {
+		var fileLink = $(this).attr("href");
+		
+		if(checkImageType(fileLink)) {
+			event.preventDefault();
+			
+			var imgTag = $("#popup_img");
+			imgTag.attr("src", fileLink);
+			
+			console.log(imgTag.attr("src"));
+			
+			$(".popup").show("slow");
+			imgTag.addClass("show");
+		}
+	});
+	
+	$("#popup_img").on("click", function() {
+		$(".popup").hide("slow");
+	});
+	
 	var replyPage = 1;
 	
 	var printData = function(replyArr, target, templateObject) {
@@ -286,6 +332,33 @@
 	});
 	
 	</script>
+	
+	<style>
+	.popup {
+		position: absolute;
+		top: 0px;
+	}
+	.back {
+		background-color: gray;
+		opacity: 0.5;
+		width: 100%;
+		height: 300%;
+		overflow: hidden;
+		z-index: 1100;
+	}
+	.front {
+		z-index: 1101;
+		opacity: 1;
+		boarder: 1px;
+		margin: auto;
+	}
+	.show {
+		position: relative;
+		max-width: 1200px;
+		max-height: 800px;
+		overflow: auto;
+	}
+	</style>
 	
 </html>
 
