@@ -125,4 +125,8 @@
 		<!-- LAST_INSERT_ID()로 직전에 생성된 데이터의 PK를 알아 낼 수 있다. -->
 		insert into tbl_attach(fullname, bno) values (#{fullName}, LAST_INSERT_ID())
 	</insert>
+	
+	<select id="getAttach" resultType="string">
+		select fullname from tbl_attach where bno = #{bno} order by regdate
+	</select>
 </mapper>
