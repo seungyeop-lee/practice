@@ -1,5 +1,5 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<%@ page session="false" %>
+<%@ page session="true" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 
 <%@ include file="../include/header.jsp" %>
@@ -24,8 +24,10 @@
 	
 	<div class="box-footer">
 		<ul class="mailbox-attachments clearfix uploadedList"></ul>
+	<c:if test="${login.uid == boardVO.writer}">
 		<button type="submit" class="btn btn-warning modifyBtn">MODIFY</button>
 		<button type="submit" class="btn btn-danger removeBtn">REMOVE</button>
+	</c:if>
 		<button type="submit" class="btn btn-primary goListBtn">LIST ALL</button>
 	</div>
 	
@@ -35,15 +37,22 @@
 				<div class="box-header">
 					<h3 class="box-title">ADD NEW REPLY</h3>
 				</div>
+			<c:if test="${not empty login}">
 				<div class="box-body">
 					<label for="newReplyWriter">Writer</label>
-					<input class="form-control" type="text" placeholder="USER ID" id="newReplyWriter">
+					<input class="form-control" type="text" id="newReplyWriter" value="${login.uid}" readonly="readonly">
 					<label for="newReplyText">ReplyText</label>
 					<input class="form-control" type="text" placeholder="REPLY TEXT" id="newReplyText">
 				</div>
 				<div class="box-footer">
 					<button type="submit" class="btn btn-primary" id="replyAddBtn">ADD REPLY</button>
 				</div>
+			</c:if>
+			<c:if test="${empty login}">
+				<div class="box-body">
+					<div><a href="javascript:goLogin();">Login Please</a></div>
+				</div>
+			</c:if>
 			</div>
 			<!-- /.box-body -->
 		</div>
@@ -68,7 +77,9 @@
 					<h3 class="timeline-header"><strong>{{rno}}</strong> -{{replyer}}</h3>
 					<div class="timeline-body">{{replytext}}</div>
 					<div class="timeline-footer">
+					{{#eqReplyer replyer }}
 						<a class="btn btn-primary btn-xs" data-toggle="modal" data-target="#modifyModal">Modify</a>
+					{{/eqReplyer}}
 					</div>
 				</div>
 			</li>
@@ -228,7 +239,7 @@
 		}
 		
 		if(pageMaker.next) {
-			str += "<li><a href='" + (pageMaker.endPage + 1) + "'> >> </a></li>"
+			str += "<li><a href='" + (pageMaker.endPage + 1) + "'> >> </a></li>";
 		}
 		
 		target.html(str);
@@ -347,6 +358,14 @@
 				}
 			}
 		});
+	});
+	
+	Handlebars.registerHelper("eqReplyer", function(replyer, block) {
+		var accum = '';
+		if(replyer == '${login.uid}') {
+			accum += block.fn();
+		}
+		return accum;
 	});
 	
 	</script>

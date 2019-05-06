@@ -1,5 +1,5 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<%@ page session="false" %>
+<%@ page session="true" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 
 <%@ include file="../include/header.jsp" %>
@@ -16,7 +16,7 @@
 			</div>
 			<div class="form-group">
 				<label for="exampleInputEmail1">Writer</label>
-				<input type="text" name="writer" class="form-control" placeholder="Enter Writer">
+				<input type="text" name="writer" class="form-control" value="${login.uid}" readonly="readonly">
 			</div>
 			<div class="form-group">
 				<label for="exampleInputEmail1">File DROP Here</label>
