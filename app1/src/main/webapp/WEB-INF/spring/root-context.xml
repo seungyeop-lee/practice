@@ -20,4 +20,13 @@
 		<property name="dataSource" ref="dataSource" />
 	</bean>
 	
+	<!-- 어노테이션이 있는 인터페이스를 하나씩 매퍼로 등록하는 방법 -->
+	<bean id="sampleMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+		<property name="mapperInterface" value="org.zerock.persistence.SampleMapper"></property>
+		<property name="sqlSessionFactory" ref="sqlSessionFactory"></property>
+	</bean>
+	
+	<!-- 어노테이션이 있는 인터페이스를 한번에 등록하는 방법 -->
+	<mybatis-spring:scan base-package="org.zerock.persistence"/>
+	
 </beans>
