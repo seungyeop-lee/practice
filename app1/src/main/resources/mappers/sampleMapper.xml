@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace는 혼용 하려는 인터페이스의 패키지명와 인터페이스 명이 일치해야 한다. -->
+<mapper namespace="org.zerock.persistence.SampleMapper">
+	<!-- 메소드명과 id가 일치하여하 한다. -->
+	<select id="getUserName" resultType="string">
+		select username
+		from tbl_member
+		where userid = #{id} and userpw = #{pw}
+	</select>
+</mapper>

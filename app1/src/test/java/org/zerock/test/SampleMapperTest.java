@@ -32,4 +32,12 @@ public class SampleMapperTest {
 		System.out.println(email);	//user10@zerock.com
 		
 	}
+	
+	@Test
+	public void testUserName() {
+		
+		String name = mapper.getUserName("user10", "user10");
+		
+		System.out.println(name);	//Quick Silver
+	}
 }
