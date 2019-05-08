@@ -40,4 +40,13 @@ public class SampleMapperTest {
 		
 		System.out.println(name);	//Quick Silver
 	}
+	
+	@Test
+	public void testUserName2() {
+		
+		String name = mapper.search("id", "user01");
+		
+		System.out.println(name);	//CAPTAIN
+		
+	}
 }

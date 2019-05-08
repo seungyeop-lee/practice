@@ -2,6 +2,7 @@ package org.zerock.persistence;
 
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.SelectProvider;
 
 public interface SampleMapper {
 
@@ -14,5 +15,9 @@ public interface SampleMapper {
 	
 	//인터페이스를 사용하지 않고, xml파일에 직접 SQL을 작성하여 매핑하는 방법 혼용가능
 	public String getUserName(@Param("id") String id, @Param("pw") String pw);
+	
+	//특정 클래스의 특정 메소드에 매개변수로 받은 값을 넣어서 반환받은 문자열을 SQL로 사용
+	@SelectProvider(type=SampleProvider.class, method="searchUserName")
+	public String search(@Param("type") String type, @Param("keyword") String keyword);
 	
 }
