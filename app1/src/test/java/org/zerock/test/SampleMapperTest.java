@@ -23,4 +23,13 @@ public class SampleMapperTest {
 		System.out.println(mapper.getTime());	//2019-05-08 22:28:13
 		
 	}
+	
+	@Test
+	public void testMail() {
+		
+		String email = mapper.getEmail("user10", "user10");
+		
+		System.out.println(email);	//user10@zerock.com
+		
+	}
 }
