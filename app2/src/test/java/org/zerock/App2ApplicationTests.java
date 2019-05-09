@@ -4,6 +4,7 @@ import java.sql.Connection;
 
 import javax.sql.DataSource;
 
+import org.apache.ibatis.session.SqlSessionFactory;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +17,9 @@ public class App2ApplicationTests {
 
 	@Autowired
 	private DataSource ds;
+	
+	@Autowired
+	private SqlSessionFactory sqlSession;
 	
 	@Test
 	public void contextLoads() {
@@ -32,6 +36,11 @@ public class App2ApplicationTests {
 		
 		con.close();
 		
+	}
+	
+	@Test
+	public void testSqlSession() throws Exception {
+		System.out.println(sqlSession);
 	}
 
 }
