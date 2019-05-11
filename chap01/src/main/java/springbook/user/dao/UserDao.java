@@ -8,8 +8,9 @@ import java.sql.SQLException;
 
 import springbook.user.domain.User;
 
-public class UserDao {
+public abstract class UserDao {
 
+	//템플릿 메소드(기본 알고리즘을 가지며, Connection같이 자주 바뀔 가능성이 있는 부분은 추상 메소드로 정의)
 	public void add(User user) throws ClassNotFoundException, SQLException {
 		
 		Connection c = getConnection();
@@ -49,9 +50,7 @@ public class UserDao {
 		
 	}
 	
-	private Connection getConnection() throws ClassNotFoundException, SQLException {
-		Class.forName("com.mysql.cj.jdbc.Driver");
-		return DriverManager.getConnection("jdbc:mysql://localhost:3306/springbook?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Tokyo", "spring", "book");
-	}
+	//팩토리 메소드 패턴을 이용해 하위 클래스에서 Connection객체 생성
+	public abstract Connection getConnection() throws ClassNotFoundException, SQLException;
 	
 }

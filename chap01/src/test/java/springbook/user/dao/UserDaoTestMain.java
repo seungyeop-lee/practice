@@ -6,7 +6,7 @@ import springbook.user.domain.User;
 
 public class UserDaoTestMain {
 	public static void main(String[] args) throws ClassNotFoundException, SQLException {
-		UserDao dao = new UserDao();
+		UserDao dao = new NUserDao();	//현재 Connection생성 로직이 구현되지 않았으므로, 불완전한 dao객체가 반환 
 		
 		User user = new User();
 		user.setId("xbeast7");
