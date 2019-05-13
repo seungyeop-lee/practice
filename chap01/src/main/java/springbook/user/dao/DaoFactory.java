@@ -1,10 +1,14 @@
 package springbook.user.dao;
 
-//UserDao 생성 책임을 맡는 Factory클래스
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
+@Configuration	//애플리케이션 컨텍스트 or 빈 팩토리가 사용 할 설정정보를 나타냄
 public class DaoFactory {
 	
-	//어떤 구상 클래스를 어떤 방식으로 만들어 준비하여 반환 할 지 결정
-	public UserDao userDao() {
+	@Bean	//UserDao타입 인스턴스를 생성 해 주는 IoC용 메소드임을 나타냄
+//	@Bean("userDao")	//Bean으로 등록 시 @Bean의 value로 이름을 정할 수 있다.
+	public UserDao userDao() {	//@Bean의 value를 설정하지 않으면 메소드명이 Bean의 이름이 된다.
 		return new UserDao(connectionMaker());
 	}
 	
@@ -16,7 +20,7 @@ public class DaoFactory {
 		return new MessageDao(connectionMaker());
 	}
 	
-	//공통적으로 사용되는 구상 클래스의 인스턴스를 반환 (중복을 제거하기 위한 분리)
+	@Bean	//ConnectionMaker타입 인스턴스를 생성 해 주는 IoC용 메소드임을 나타냄
 	public ConnectionMaker connectionMaker() {
 		return new DConnectionMaker();
 	}
