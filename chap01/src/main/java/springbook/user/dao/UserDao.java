@@ -9,25 +9,21 @@ import springbook.user.domain.User;
 
 public class UserDao {
 	
-	private static UserDao INSTANCE;	//싱글톤 인스턴스를 저장 할 필드
+	//초기 설정 후 바뀌지 않는 읽기전용 인스턴스 변수
+	private ConnectionMaker connectionMaker;
 	
-	private ConnectionMaker connectionMaker;	//인터페이스이기 때문에 dao에서는 구체적인 클래스 정보를 알 수 없음
+	//매번 새로운 값으로 바뀌는 인스턴스 변수, 동시에 사용 시 심각한 문제 발생을 야기한다.
+	private Connection c;
+	private User user;
 	
-	//외부에서 생성자를 호출 못하도록 private
-	private UserDao(ConnectionMaker connectionMaker) {
+	public UserDao(ConnectionMaker connectionMaker) {
 		//Connection객체를 반환하는 메소드를 제공하는 객체를 필드에 저장
 		this.connectionMaker = connectionMaker;	//UserDao클래스에서 사용 할 ConnectionMaker를 전달 받아 사용 
 	}
 	
-	//싱글톤 인스턴스를 반환하는 메소드
-	public static synchronized UserDao getInstance() {
-		if(INSTANCE == null) INSTANCE = new UserDao(new DConnectionMaker());
-		return INSTANCE;
-	}
-
 	public void add(User user) throws ClassNotFoundException, SQLException {
 		
-		Connection c = connectionMaker.makeConnection();	//인터페이스를 사용하므로, 구상클래스가 변경되어도 영향을 받지 않음
+		c = connectionMaker.makeConnection();	//인터페이스를 사용하므로, 구상클래스가 변경되어도 영향을 받지 않음
 		
 		PreparedStatement ps = c.prepareStatement("insert into users(id, name, password) values(?, ?, ?)");
 		ps.setString(1, user.getId());
@@ -51,7 +47,7 @@ public class UserDao {
 		ResultSet rs = ps.executeQuery();
 		rs.next();
 		
-		User user = new User();
+		user = new User();
 		user.setId(rs.getString("id"));
 		user.setName(rs.getString("name"));
 		user.setPassword(rs.getString("password"));
