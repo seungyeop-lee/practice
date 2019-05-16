@@ -5,20 +5,21 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import javax.sql.DataSource;
+
 import springbook.user.domain.User;
 
 public class UserDao {
 	
-	private ConnectionMaker connectionMaker;
+	private DataSource dataSource;
 	
-	//수정자 메소드 DI 방식 (자바빈 규약에 따름, XML에서 Bean설정시 편리)
-	public void setConnectionMaker(ConnectionMaker connectionMaker) {
-		this.connectionMaker = connectionMaker;
+	public void setDataSource(DataSource dataSource) {
+		this.dataSource = dataSource;
 	}
 
 	public void add(User user) throws ClassNotFoundException, SQLException {
 		
-		Connection c = connectionMaker.makeConnection();	//인터페이스를 사용하므로, 구상클래스가 변경되어도 영향을 받지 않음
+		Connection c = dataSource.getConnection();	//인터페이스를 사용하므로, 구상클래스가 변경되어도 영향을 받지 않음
 		
 		PreparedStatement ps = c.prepareStatement("insert into users(id, name, password) values(?, ?, ?)");
 		ps.setString(1, user.getId());
@@ -34,7 +35,7 @@ public class UserDao {
 	
 	public User get(String id) throws ClassNotFoundException, SQLException {
 		
-		Connection c = connectionMaker.makeConnection();
+		Connection c = dataSource.getConnection();
 
 		PreparedStatement ps = c.prepareStatement("select * from users where id = ?");
 		ps.setString(1, id);

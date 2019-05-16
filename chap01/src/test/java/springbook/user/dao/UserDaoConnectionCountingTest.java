@@ -28,7 +28,7 @@ public class UserDaoConnectionCountingTest {
 		System.out.println(user2.getId() + " 조회 성공");
 		
 		//Connection객체 생성 메소드는 추가와 획득, 총 2번 실행되었으므로 2가 반환되어 출력
-		CountingConnectionMaker ccm = context.getBean("connectionMaker", CountingConnectionMaker.class);
+		CountingDataSource ccm = context.getBean("dataSource", CountingDataSource.class);
 		System.out.println("Connection counter: " + ccm.getCounter());
 	}
 }

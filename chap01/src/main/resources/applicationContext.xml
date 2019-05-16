@@ -3,11 +3,11 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 	
-	<bean id="connectionMaker" class="springbook.user.dao.DConnectionMaker" />
+	<!-- DB연결 정보가 설정 되지 않았음 -->
+	<bean id="dataSource" class="org.springframework.jdbc.datasource.SimpleDriverDataSource" />
 	
 	<bean id="userDao" class="springbook.user.dao.UserDao">
-		<!-- setConnectionMaker(set+property name)메소드에 인수로 connectionMaker(ref)를 넣음 -->
-		<property name="connectionMaker" ref="connectionMaker" />
+		<property name="dataSource" ref="dataSource"></property>
 	</bean>
 
 </beans>
