@@ -8,7 +8,6 @@ import org.springframework.context.support.GenericXmlApplicationContext;
 import springbook.user.domain.User;
 
 public class UserDaoTestMain {
-	//DataSource의 DB연결정보가 설정되지 않았으므로 실패함
 	public static void main(String[] args) throws ClassNotFoundException, SQLException {
 		//문자열에 위치한 xml을 설정파일로 하는 ApplicationContext객체를 생성
 		//xml파일의 위치 문자열 맨 처음에 /가 붙어있지 않아도, 항상 루트에서부터 시작하는 클래스패스를 나타냄
