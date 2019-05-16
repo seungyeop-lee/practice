@@ -11,10 +11,11 @@ public class UserDao {
 	
 	private ConnectionMaker connectionMaker;
 	
-	public UserDao(ConnectionMaker connectionMaker) {
+	//수정자 메소드 DI 방식 (자바빈 규약에 따름, XML에서 Bean설정시 편리)
+	public void setConnectionMaker(ConnectionMaker connectionMaker) {
 		this.connectionMaker = connectionMaker;
 	}
-	
+
 	public void add(User user) throws ClassNotFoundException, SQLException {
 		
 		Connection c = connectionMaker.makeConnection();	//인터페이스를 사용하므로, 구상클래스가 변경되어도 영향을 받지 않음

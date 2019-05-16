@@ -8,7 +8,9 @@ public class CountingDaoFactory {
 
 	@Bean
 	public UserDao userDao() {
-		return new UserDao(connectionMaker());	//기능이 추가된 Connection생성 객체를 인수로 사용
+		UserDao userDao = new UserDao();
+		userDao.setConnectionMaker(connectionMaker()); //기능이 추가된 Connection생성 객체를 인수로 사용
+		return userDao;
 	}
 
 	@Bean

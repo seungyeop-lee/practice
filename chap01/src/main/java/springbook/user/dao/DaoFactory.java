@@ -11,7 +11,9 @@ public class DaoFactory {
 	@Lazy	//컨텍스트 어플리케이션 생성 시 이 메소드에 해당하는 빈 초기화는 실제 불려지기 전에 수행 하지 않게한다.
 //	@Bean("userDao")	//Bean으로 등록 시 @Bean의 value로 이름을 정할 수 있다.
 	public UserDao userDao() {	//@Bean의 value를 설정하지 않으면 메소드명이 Bean의 이름이 된다.
-		return new UserDao(connectionMaker()); 
+		UserDao userDao = new UserDao();
+		userDao.setConnectionMaker(connectionMaker());
+		return userDao; 
 	}
 	
 	public AccountDao accountDao() {
