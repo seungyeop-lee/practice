@@ -4,13 +4,15 @@ import java.sql.SQLException;
 
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.context.support.GenericXmlApplicationContext;
 
 import springbook.user.domain.User;
 
 public class UserDaoTestMain {
 	public static void main(String[] args) throws ClassNotFoundException, SQLException {
-		//@Configuration이 붙은 클래스를 설정 정보로 하는 어플리케이션 컨텍스트 생성
-		ApplicationContext context = new AnnotationConfigApplicationContext(DaoFactory.class);
+		//문자열에 위치한 xml을 설정파일로 하는 ApplicationContext객체를 생성
+		//xml파일의 위치 문자열 맨 처음에 /가 붙어있지 않아도, 항상 루트에서부터 시작하는 클래스패스를 나타냄
+		ApplicationContext context = new GenericXmlApplicationContext("/applicationContext.xml");
 
 		//userDao라는 이름을 가진 IoC용 메소드의 반환 값을 UserDao타입으로 형변환 한 인스턴스 
 		UserDao dao = context.getBean("userDao", UserDao.class);
