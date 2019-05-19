@@ -14,10 +14,7 @@ import springbook.user.domain.User;
 
 public class UserDaoTest {
 
-	public static void main(String[] args) {
-		JUnitCore.main("springbook.user.dao.UserDaoTest");
-	}
-	
+	//IDE에서는 main메소드를 만들지 않아도 테스트가 가능!
 	@Test
 	public void addAndGet() throws SQLException {
 		ApplicationContext context = new ClassPathXmlApplicationContext("/applicationContext.xml");
