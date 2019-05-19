@@ -17,7 +17,7 @@ public class UserDao {
 		this.dataSource = dataSource;
 	}
 
-	public void add(User user) throws ClassNotFoundException, SQLException {
+	public void add(User user) throws SQLException {
 		
 		Connection c = dataSource.getConnection();
 		
@@ -33,7 +33,7 @@ public class UserDao {
 		
 	}
 	
-	public User get(String id) throws ClassNotFoundException, SQLException {
+	public User get(String id) throws SQLException {
 		
 		Connection c = dataSource.getConnection();
 
