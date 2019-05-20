@@ -5,9 +5,9 @@ import static org.junit.Assert.assertThat;
 
 import java.sql.SQLException;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.context.support.GenericXmlApplicationContext;
 import org.springframework.dao.EmptyResultDataAccessException;
 
@@ -15,14 +15,26 @@ import springbook.user.domain.User;
 
 public class UserDaoTest {
 
+	//픽스처(테스트를 수행하는 데 필요한 정보나 오브젝트)
+	private UserDao dao;
+	private User user1;
+	private User user2;
+	private User user3;
+	
+	//각 테스트를 실행하기 전, 테스트에 필요한 환경 구축
+	@Before
+	public void setUp() {
+		ApplicationContext context = new GenericXmlApplicationContext("/applicationContext.xml");
+		dao = context.getBean("userDao", UserDao.class);
+		
+		user1 = new User("id1111", "name1111", "ps1111");
+		user2 = new User("id2222", "name2222", "ps2222");
+		user3 = new User("id3333", "name3333", "ps3333");
+	}
+	
 	//IDE에서는 main메소드를 만들지 않아도 테스트가 가능!
 	@Test
 	public void addAndGet() throws SQLException {
-		ApplicationContext context = new ClassPathXmlApplicationContext("/applicationContext.xml");
-		
-		UserDao dao = context.getBean("userDao", UserDao.class);
-		User user1 = new User("id1111", "name1111", "ps1111");
-		User user2 = new User("id2222", "name2222", "ps2222");
 		
 		dao.deleteAll();	//테스트 전 DB의 데이터를 전부 삭제
 		assertThat(dao.getCount(), is(0));	//dao.deleteAll()작동 확인
@@ -45,12 +57,6 @@ public class UserDaoTest {
 	
 	@Test
 	public void count() throws SQLException {
-		ApplicationContext context = new GenericXmlApplicationContext("/applicationContext.xml");
-		
-		UserDao dao = context.getBean("userDao", UserDao.class);
-		User user1 = new User("id1111", "name1111", "ps1111");
-		User user2 = new User("id2222", "name2222", "ps2222");
-		User user3 = new User("id3333", "name3333", "ps3333");
 		
 		//데이터를 1개 추가 할 때마다 count가 1씩 증가 하는 것을 확인
 		
@@ -71,9 +77,6 @@ public class UserDaoTest {
 	//expected에 설정된 예외가 발생해야 테스트 성공!
 	@Test(expected = EmptyResultDataAccessException.class)
 	public void getUserFailure() throws SQLException {
-		
-		ApplicationContext context = new GenericXmlApplicationContext("/applicationContext.xml");
-		UserDao dao = context.getBean("userDao", UserDao.class);
 		
 		//테이블을 비운 후, 비워진 것을 확인
 		dao.deleteAll();
