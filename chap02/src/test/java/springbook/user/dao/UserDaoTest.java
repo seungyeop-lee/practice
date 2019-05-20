@@ -7,15 +7,29 @@ import java.sql.SQLException;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.GenericXmlApplicationContext;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import springbook.user.domain.User;
 
+//스프링의 요소를 테스트에서 사용 가능하게 함
+@RunWith(SpringJUnit4ClassRunner.class)
+//구성xml파일 위치 설정, 다른 테스트 클래스에 동일한 설정이 있을경우 동일한 애플리케이션 컨텍스트를 공유
+@ContextConfiguration(locations="/applicationContext.xml")
 public class UserDaoTest {
 
+	//애플리케이션 컨텍스트에 변수타입과 호환되는 빈이 있을경우, 빈의 참조를 주입
+	//타입과 호환되는 빈이 2개 이상일 경우, 필드명과 동일한 이름을 가진 빈을 선택
+	//필드명으로도 빈을 찾을 수 없으면 예외가 발생
+	@Autowired
+	private ApplicationContext context;	//애플리케이션 컨텍스트는 초기화 시, 자기 자신도 빈으로 등록 함
+	
 	//픽스처(테스트를 수행하는 데 필요한 정보나 오브젝트)
+	@Autowired
 	private UserDao dao;
 	private User user1;
 	private User user2;
@@ -24,7 +38,8 @@ public class UserDaoTest {
 	//각 테스트를 실행하기 전, 테스트에 필요한 환경 구축
 	@Before
 	public void setUp() {
-		ApplicationContext context = new GenericXmlApplicationContext("/applicationContext.xml");
+		System.out.println(this.context);	//테스트에 사용되는 애플리케이션 컨텍스트는 동일
+		System.out.println(this);	//테스트 별로 각각 다른 객체가 생성
 		dao = context.getBean("userDao", UserDao.class);
 		
 		user1 = new User("id1111", "name1111", "ps1111");
