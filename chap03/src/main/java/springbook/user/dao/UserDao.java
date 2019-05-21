@@ -68,32 +68,68 @@ public class UserDao {
 	
 	public void deleteAll() throws SQLException {
 		
-		Connection c = dataSource.getConnection();
+		Connection c = null;
+		PreparedStatement ps = null;
 		
-		PreparedStatement ps = c.prepareStatement("delete from users");
-		
-		ps.executeUpdate();
-		
-		ps.close();
-		c.close();
+		try {
+			c = dataSource.getConnection();
+			ps = c.prepareStatement("delete from users");
+			ps.executeUpdate();
+		} catch (Exception e) {
+			throw e;
+		} finally {
+			//에러발생 유무에 관계없이, 사용한 리소스를 반환한다.
+			//만들어진 순서의 역순으로 리소스를 반환한다.
+			if(ps != null) {
+				try {
+					ps.close();	//리소스 반환 중 예외 발생 가능성이 있음
+				} catch (SQLException e) {
+				}
+			}
+			if(c != null) {
+				try {
+					c.close();
+				} catch (SQLException e) {
+				}
+			}
+		}
 		
 	}
 	
 	public int getCount() throws SQLException {
 		
-		Connection c = dataSource.getConnection();
-		
-		PreparedStatement ps = c.prepareStatement("select count(*) from users");
-		
-		ResultSet rs = ps.executeQuery();
-		rs.next();
-		int count = rs.getInt(1);
-		
-		rs.close();
-		ps.close();
-		c.close();
-		
-		return count;
+		Connection c = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		try {
+			c = dataSource.getConnection();
+			ps = c.prepareStatement("select count(*) from users");
+			
+			rs = ps.executeQuery();
+			rs.next();
+			return rs.getInt(1);
+		} catch (Exception e) {
+			throw e;
+		} finally {
+			if(rs != null) {
+				try {
+					rs.close();
+				} catch (SQLException e) {
+				}
+			}
+			if(ps != null) {
+				try {
+					ps.close();
+				} catch (SQLException e) {
+				}
+			}
+			if(c != null) {
+				try {
+					c.close();
+				} catch (SQLException e) {
+				}
+			}
+		}
 		
 	}
 	
