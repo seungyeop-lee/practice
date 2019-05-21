@@ -5,26 +5,19 @@ import static org.junit.Assert.assertThat;
 
 import java.sql.SQLException;
 
+import javax.sql.DataSource;
+
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.jdbc.datasource.SingleConnectionDataSource;
 
 import springbook.user.domain.User;
 
-//스프링의 요소를 테스트에서 사용 가능하게 함
-@RunWith(SpringJUnit4ClassRunner.class)
-//구성xml파일 위치 설정, 다른 테스트 클래스에 동일한 설정이 있을경우 동일한 애플리케이션 컨텍스트를 공유
-@ContextConfiguration(locations="/test-applicationContext.xml")
 public class UserDaoTest {
 
 	//픽스처(테스트를 수행하는 데 필요한 정보나 오브젝트)
-	@Autowired
 	private UserDao dao;
-	
 	private User user1;
 	private User user2;
 	private User user3;
@@ -32,6 +25,13 @@ public class UserDaoTest {
 	//각 테스트를 실행하기 전, 테스트에 필요한 환경 구축
 	@Before
 	public void setUp() {
+		//UserDao객체를 직접 생성 후 DI
+		dao = new UserDao();
+		DataSource dataSource = new SingleConnectionDataSource(
+				"jdbc:mysql://localhost:3306/testdb?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Tokyo",
+				"spring", "book", true);
+		dao.setDataSource(dataSource);
+		
 		user1 = new User("id1111", "name1111", "ps1111");
 		user2 = new User("id2222", "name2222", "ps2222");
 		user3 = new User("id3333", "name3333", "ps3333");
