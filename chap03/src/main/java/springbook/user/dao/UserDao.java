@@ -67,6 +67,15 @@ public class UserDao {
 	}
 	
 	public void deleteAll() throws SQLException {
+		//statement생성 전략을 가진 객체 생성
+		StatementStrategy strategy = new DeleteAllStatement();
+		//전략을 인수로 전달하여 전략에 담긴 SQL문을 실행
+		jdbcContextWithStatementStrategy(strategy);
+	}
+	
+	//실행 SQL구문을 파라미터로 받아서 실행
+	//반복되는 부분을 메소드로 분리한 결과
+	public void jdbcContextWithStatementStrategy(StatementStrategy stmt) throws SQLException {
 		
 		Connection c = null;
 		PreparedStatement ps = null;
@@ -74,9 +83,8 @@ public class UserDao {
 		try {
 			c = dataSource.getConnection();
 			
-			//이런 식으로 전략 패턴을 사용하면 클래스 내부에서 구체적인 객체를 생성하므로 의미가 없다...
-			StatementStrategy strategy = new DeleteAllStatement();
-			ps = strategy.makePreparedStatement(c);
+			//PreparedStatement의 생성은 파라미터로 설정된 전략 객체에 위임한다.
+			ps = stmt.makePreparedStatement(c);
 			
 			ps.executeUpdate();
 		} catch (Exception e) {
