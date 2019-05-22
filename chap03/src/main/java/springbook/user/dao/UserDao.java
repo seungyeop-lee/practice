@@ -73,7 +73,12 @@ public class UserDao {
 		
 		try {
 			c = dataSource.getConnection();
-			ps = c.prepareStatement("delete from users");
+			
+			//변하는 부분을 메소드로 추출하였다.
+			//남은 부분이 재사용이 필요한 부분, 메소드로 추출한 부분이 변하는 부분
+			//효용성이 없다...
+			ps = makeStatement(c);
+			
 			ps.executeUpdate();
 		} catch (Exception e) {
 			throw e;
@@ -131,6 +136,13 @@ public class UserDao {
 			}
 		}
 		
+	}
+	
+	//deleteAll()에서 반복되는 statement생성 부분을 메소드로 추출
+	private PreparedStatement makeStatement(Connection c) throws SQLException {
+		PreparedStatement ps;
+		ps = c.prepareStatement("delete from users");
+		return ps;
 	}
 	
 }
