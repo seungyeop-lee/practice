@@ -11,7 +11,7 @@ import org.springframework.dao.EmptyResultDataAccessException;
 
 import springbook.user.domain.User;
 
-public class UserDao {
+public abstract class UserDao {
 	
 	private DataSource dataSource;
 	
@@ -23,7 +23,7 @@ public class UserDao {
 		
 		Connection c = dataSource.getConnection();
 		
-		PreparedStatement ps = c.prepareStatement("insert into users(id, name, password) values(?, ?, ?)");
+		PreparedStatement ps = makeAddStatement(c);
 		ps.setString(1, user.getId());
 		ps.setString(2, user.getName());
 		ps.setString(3, user.getPassword());
@@ -39,7 +39,7 @@ public class UserDao {
 		
 		Connection c = dataSource.getConnection();
 
-		PreparedStatement ps = c.prepareStatement("select * from users where id = ?");
+		PreparedStatement ps = makeGetStatement(c);
 		ps.setString(1, id);
 		
 		ResultSet rs = ps.executeQuery();
@@ -74,10 +74,7 @@ public class UserDao {
 		try {
 			c = dataSource.getConnection();
 			
-			//변하는 부분을 메소드로 추출하였다.
-			//남은 부분이 재사용이 필요한 부분, 메소드로 추출한 부분이 변하는 부분
-			//효용성이 없다...
-			ps = makeStatement(c);
+			ps = makeDeleteAllStatement(c);
 			
 			ps.executeUpdate();
 		} catch (Exception e) {
@@ -108,7 +105,7 @@ public class UserDao {
 		ResultSet rs = null;
 		try {
 			c = dataSource.getConnection();
-			ps = c.prepareStatement("select count(*) from users");
+			ps = makeGetCountStatement(c);
 			
 			rs = ps.executeQuery();
 			rs.next();
@@ -138,11 +135,10 @@ public class UserDao {
 		
 	}
 	
-	//deleteAll()에서 반복되는 statement생성 부분을 메소드로 추출
-	private PreparedStatement makeStatement(Connection c) throws SQLException {
-		PreparedStatement ps;
-		ps = c.prepareStatement("delete from users");
-		return ps;
-	}
+	//상속받는 클래스에서 로직을 결정
+	protected abstract PreparedStatement makeAddStatement(Connection c) throws SQLException;
+	protected abstract PreparedStatement makeGetStatement(Connection c) throws SQLException;
+	protected abstract PreparedStatement makeDeleteAllStatement(Connection c) throws SQLException;
+	protected abstract PreparedStatement makeGetCountStatement(Connection c) throws SQLException;
 	
 }
