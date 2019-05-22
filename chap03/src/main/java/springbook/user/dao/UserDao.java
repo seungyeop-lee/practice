@@ -20,28 +20,19 @@ public class UserDao {
 	}
 
 	public void add(User user) throws SQLException {
-		
-		//AddStatement는 add 메소드의 로직과 강하게 결합되있으므로 로컬 클래스로 설정
-		class AddStatement implements StatementStrategy {
-
+		jdbcContextWithStatementStrategy(new StatementStrategy() {	//인수로 익명 객체 생성
 			@Override
 			public PreparedStatement makePreparedStatement(Connection c) throws SQLException {
-				
 				PreparedStatement ps = c.prepareStatement("insert into users(id, name, password) values(?, ?, ?)");
 				
-				//로컬 클래스의 경우, 외부 메소드의 로컬변수 및 파라미터의 접근이 가능
+				//익명 객체 내부에서도 외부 메소드의 지역 변수 접근 가능
 				ps.setString(1, user.getId());
 				ps.setString(2, user.getName());
 				ps.setString(3, user.getPassword());
 				
 				return ps;
-				
 			}
-		}
-		
-		//add에 해당하는 SQL생성 전략 객체 생성
-		StatementStrategy st = new AddStatement();
-		jdbcContextWithStatementStrategy(st);
+		});
 	}
 	
 	public User get(String id) throws SQLException {
@@ -76,10 +67,12 @@ public class UserDao {
 	}
 	
 	public void deleteAll() throws SQLException {
-		//statement생성 전략을 가진 객체 생성
-		StatementStrategy strategy = new DeleteAllStatement();
-		//전략을 인수로 전달하여 전략에 담긴 SQL문을 실행
-		jdbcContextWithStatementStrategy(strategy);
+		jdbcContextWithStatementStrategy(new StatementStrategy() {
+			@Override
+			public PreparedStatement makePreparedStatement(Connection c) throws SQLException {
+				return c.prepareStatement("delete from users");
+			}
+		});
 	}
 	
 	//실행 SQL구문을 파라미터로 받아서 실행
