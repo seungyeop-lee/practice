@@ -11,7 +11,7 @@ import org.springframework.dao.EmptyResultDataAccessException;
 
 import springbook.user.domain.User;
 
-public abstract class UserDao {
+public class UserDao {
 	
 	private DataSource dataSource;
 	
@@ -23,7 +23,7 @@ public abstract class UserDao {
 		
 		Connection c = dataSource.getConnection();
 		
-		PreparedStatement ps = makeAddStatement(c);
+		PreparedStatement ps = c.prepareStatement("insert into users(id, name, password) values(?, ?, ?)");
 		ps.setString(1, user.getId());
 		ps.setString(2, user.getName());
 		ps.setString(3, user.getPassword());
@@ -39,7 +39,7 @@ public abstract class UserDao {
 		
 		Connection c = dataSource.getConnection();
 
-		PreparedStatement ps = makeGetStatement(c);
+		PreparedStatement ps = c.prepareStatement("select * from users where id = ?");
 		ps.setString(1, id);
 		
 		ResultSet rs = ps.executeQuery();
@@ -74,7 +74,9 @@ public abstract class UserDao {
 		try {
 			c = dataSource.getConnection();
 			
-			ps = makeDeleteAllStatement(c);
+			//이런 식으로 전략 패턴을 사용하면 클래스 내부에서 구체적인 객체를 생성하므로 의미가 없다...
+			StatementStrategy strategy = new DeleteAllStatement();
+			ps = strategy.makePreparedStatement(c);
 			
 			ps.executeUpdate();
 		} catch (Exception e) {
@@ -105,7 +107,7 @@ public abstract class UserDao {
 		ResultSet rs = null;
 		try {
 			c = dataSource.getConnection();
-			ps = makeGetCountStatement(c);
+			ps = c.prepareStatement("select count(*) from users");
 			
 			rs = ps.executeQuery();
 			rs.next();
@@ -134,11 +136,5 @@ public abstract class UserDao {
 		}
 		
 	}
-	
-	//상속받는 클래스에서 로직을 결정
-	protected abstract PreparedStatement makeAddStatement(Connection c) throws SQLException;
-	protected abstract PreparedStatement makeGetStatement(Connection c) throws SQLException;
-	protected abstract PreparedStatement makeDeleteAllStatement(Connection c) throws SQLException;
-	protected abstract PreparedStatement makeGetCountStatement(Connection c) throws SQLException;
 	
 }
