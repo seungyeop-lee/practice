@@ -15,18 +15,14 @@ public class Calculator {
 	 */
 	public int calcSum(String filepath) throws IOException {
 		
-		BufferedReaderCallback sumCallback = new BufferedReaderCallback() {
+		LineCallback sumCallback = new LineCallback() {
 			@Override
-			public Integer doSomethingWithReader(BufferedReader br) throws IOException {
-				Integer sum = 0;
-				String line = null;
-				while((line = br.readLine()) != null) {
-					sum += Integer.valueOf(line);
-				}
-				return sum;
+			public Integer doSomethingWithLine(String line, Integer value) {
+				return value + Integer.valueOf(line);
 			}
 		};
-		return fileReadTemplate(filepath, sumCallback);
+		
+		return fileReadTemplate(filepath, sumCallback, 0);
 		
 	}
 	
@@ -38,18 +34,15 @@ public class Calculator {
 	 * @throws IOException
 	 */
 	public Integer calcMultiply(String filepath) throws IOException {
-		BufferedReaderCallback multiplyCallback = new BufferedReaderCallback() {
+		
+		LineCallback multiplyCallback = new LineCallback() {
 			@Override
-			public Integer doSomethingWithReader(BufferedReader br) throws IOException {
-				Integer multiply = 1;
-				String line = null;
-				while((line = br.readLine()) != null) {
-					multiply *= Integer.valueOf(line);
-				}
-				return multiply;
+			public Integer doSomethingWithLine(String line, Integer value) {
+				return value * Integer.valueOf(line);
 			}
 		};
-		return fileReadTemplate(filepath, multiplyCallback);
+		
+		return fileReadTemplate(filepath, multiplyCallback, 1);
 	}
 	
 	/**
@@ -57,20 +50,25 @@ public class Calculator {
 	 * 
 	 * @param filepath 파일 경로
 	 * @param callback 실행 메소드를 담은 객체
+	 * @param initVal 계산 결과를 저장할 변수의 초기값
 	 * @return callback실행 결과
 	 * @throws IOException
 	 */
-	public Integer fileReadTemplate(String filepath, BufferedReaderCallback callback) throws IOException {
+	public Integer fileReadTemplate(String filepath, LineCallback callback, int initVal) throws IOException {
 		
 		BufferedReader br = null;
 		
 		try {
 			br = new BufferedReader(new FileReader(filepath));
 			
-			//변하는 부분인 계산 부분을 콜백으로 분리하여 위임한다.
-			int ret = callback.doSomethingWithReader(br);
+			Integer res = initVal;
+			String line = null;
+			while((line = br.readLine()) != null) {
+				//반복문 안에서의 계산을 콜백 객체에게 위임
+				res = callback.doSomethingWithLine(line, res);
+			}
 			
-			return ret;
+			return res;
 		} catch (IOException e) {
 			System.out.println(e.getMessage());
 			throw e;
