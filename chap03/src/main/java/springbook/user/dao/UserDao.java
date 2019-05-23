@@ -14,13 +14,19 @@ import springbook.user.domain.User;
 public class UserDao {
 	
 	private DataSource dataSource;
+	private JdbcContext jdbcContext;
 	
 	public void setDataSource(DataSource dataSource) {
 		this.dataSource = dataSource;
 	}
+	
+	//SQL실행 컨텍스트를 DI받기위한 메소드
+	public void setJdbcContext(JdbcContext jdbcContext) {
+		this.jdbcContext = jdbcContext;
+	}
 
 	public void add(User user) throws SQLException {
-		jdbcContextWithStatementStrategy(new StatementStrategy() {	//인수로 익명 객체 생성
+		this.jdbcContext.workWithStatementStrategy(new StatementStrategy() {	//인수로 익명 객체 생성
 			@Override
 			public PreparedStatement makePreparedStatement(Connection c) throws SQLException {
 				PreparedStatement ps = c.prepareStatement("insert into users(id, name, password) values(?, ?, ?)");
@@ -67,47 +73,12 @@ public class UserDao {
 	}
 	
 	public void deleteAll() throws SQLException {
-		jdbcContextWithStatementStrategy(new StatementStrategy() {
+		this.jdbcContext.workWithStatementStrategy(new StatementStrategy() {
 			@Override
 			public PreparedStatement makePreparedStatement(Connection c) throws SQLException {
 				return c.prepareStatement("delete from users");
 			}
 		});
-	}
-	
-	//실행 SQL구문을 파라미터로 받아서 실행
-	//반복되는 부분을 메소드로 분리한 결과
-	public void jdbcContextWithStatementStrategy(StatementStrategy stmt) throws SQLException {
-		
-		Connection c = null;
-		PreparedStatement ps = null;
-		
-		try {
-			c = dataSource.getConnection();
-			
-			//PreparedStatement의 생성은 파라미터로 설정된 전략 객체에 위임한다.
-			ps = stmt.makePreparedStatement(c);
-			
-			ps.executeUpdate();
-		} catch (Exception e) {
-			throw e;
-		} finally {
-			//에러발생 유무에 관계없이, 사용한 리소스를 반환한다.
-			//만들어진 순서의 역순으로 리소스를 반환한다.
-			if(ps != null) {
-				try {
-					ps.close();	//리소스 반환 중 예외 발생 가능성이 있음
-				} catch (SQLException e) {
-				}
-			}
-			if(c != null) {
-				try {
-					c.close();
-				} catch (SQLException e) {
-				}
-			}
-		}
-		
 	}
 	
 	public int getCount() throws SQLException {
