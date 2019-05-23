@@ -28,19 +28,8 @@ public class UserDao {
 	}
 	
 	public void add(User user) throws SQLException {
-		this.jdbcContext.workWithStatementStrategy(new StatementStrategy() {	//인수로 익명 객체 생성
-			@Override
-			public PreparedStatement makePreparedStatement(Connection c) throws SQLException {
-				PreparedStatement ps = c.prepareStatement("insert into users(id, name, password) values(?, ?, ?)");
-				
-				//익명 객체 내부에서도 외부 메소드의 지역 변수 접근 가능
-				ps.setString(1, user.getId());
-				ps.setString(2, user.getName());
-				ps.setString(3, user.getPassword());
-				
-				return ps;
-			}
-		});
+		jdbcContext.executeSql("insert into users(id, name, password) values(?, ?, ?)",
+				user.getId(), user.getName(), user.getPassword());
 	}
 	
 	public User get(String id) throws SQLException {
