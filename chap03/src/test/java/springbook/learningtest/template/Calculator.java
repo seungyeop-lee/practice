@@ -15,7 +15,7 @@ public class Calculator {
 	 */
 	public int calcSum(String filepath) throws IOException {
 		
-		LineCallback sumCallback = new LineCallback() {
+		LineCallback<Integer> sumCallback = new LineCallback<Integer>() {
 			@Override
 			public Integer doSomethingWithLine(String line, Integer value) {
 				return value + Integer.valueOf(line);
@@ -35,7 +35,7 @@ public class Calculator {
 	 */
 	public Integer calcMultiply(String filepath) throws IOException {
 		
-		LineCallback multiplyCallback = new LineCallback() {
+		LineCallback<Integer> multiplyCallback = new LineCallback<Integer>() {
 			@Override
 			public Integer doSomethingWithLine(String line, Integer value) {
 				return value * Integer.valueOf(line);
@@ -43,6 +43,25 @@ public class Calculator {
 		};
 		
 		return fileReadTemplate(filepath, multiplyCallback, 1);
+	}
+	
+	/**
+	 * 파일의 모든 줄에 써있는 문자를 한 줄로 연결함
+	 * 
+	 * @param filepath 대상 파일의 경로
+	 * @return 모든 줄에 써있는 문자를 연결한 문자열
+	 * @throws IOException
+	 */
+	public String concatenate(String filepath) throws IOException {
+		
+		LineCallback<String> concatenateCallback = new LineCallback<String>() {
+			@Override
+			public String doSomethingWithLine(String line, String value) {
+				return value + line;
+			}
+		};
+		
+		return fileReadTemplate(filepath, concatenateCallback, "");
 	}
 	
 	/**
@@ -54,14 +73,14 @@ public class Calculator {
 	 * @return callback실행 결과
 	 * @throws IOException
 	 */
-	public Integer fileReadTemplate(String filepath, LineCallback callback, int initVal) throws IOException {
+	public <T> T fileReadTemplate(String filepath, LineCallback<T> callback, T initVal) throws IOException {
 		
 		BufferedReader br = null;
 		
 		try {
 			br = new BufferedReader(new FileReader(filepath));
 			
-			Integer res = initVal;
+			T res = initVal;
 			String line = null;
 			while((line = br.readLine()) != null) {
 				//반복문 안에서의 계산을 콜백 객체에게 위임
