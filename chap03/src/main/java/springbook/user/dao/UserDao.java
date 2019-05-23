@@ -75,7 +75,7 @@ public class UserDao {
 	}
 	
 	public void deleteAll() throws SQLException {
-		executeSql("delete from users");
+		jdbcContext.executeSql("delete from users");
 	}
 	
 	public int getCount() throws SQLException {
@@ -113,16 +113,6 @@ public class UserDao {
 			}
 		}
 		
-	}
-	
-	//변하지 않는 콜백 클래스 정의 및 객체 생성부분을 분리
-	private void executeSql(String query) throws SQLException {
-		this.jdbcContext.workWithStatementStrategy(new StatementStrategy() {
-			@Override
-			public PreparedStatement makePreparedStatement(Connection c) throws SQLException {
-				return c.prepareStatement(query);
-			}
-		});
 	}
 	
 }

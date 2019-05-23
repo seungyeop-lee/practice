@@ -33,4 +33,16 @@ public class JdbcContext {
 		}
 		
 	}
+	
+	//DAO가 공유 할 수 있도록 컨텍스트 객체로 옮김
+	//workWithStatementStrategy메소드와 executeSql메소드는 하나의 목적(쿼리문의 실행)을 위한 코드
+	//이러한 경우에는 응집력이 강하다고 할 수 있으므로, 모아놓는 것이 좋다.
+	public void executeSql(String query) throws SQLException {
+		workWithStatementStrategy(new StatementStrategy() {
+			@Override
+			public PreparedStatement makePreparedStatement(Connection c) throws SQLException {
+				return c.prepareStatement(query);
+			}
+		});
+	}
 }
