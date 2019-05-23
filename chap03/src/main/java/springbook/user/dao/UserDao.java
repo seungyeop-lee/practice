@@ -16,15 +16,17 @@ public class UserDao {
 	private DataSource dataSource;
 	private JdbcContext jdbcContext;
 	
+	//DataSource 수정자 메소드가
+	//의존객체(JdbcContext)의 생성, 필요 의존성 주입(DataSource)의 역할을 맡는다.
 	public void setDataSource(DataSource dataSource) {
+		//JdbcContext객체는 UserDao와 긴밀한 관계이므로 UserDao내부에서 생성!
+		this.jdbcContext = new JdbcContext();
+		
+		this.jdbcContext.setDataSource(dataSource);
+		
 		this.dataSource = dataSource;
 	}
 	
-	//SQL실행 컨텍스트를 DI받기위한 메소드
-	public void setJdbcContext(JdbcContext jdbcContext) {
-		this.jdbcContext = jdbcContext;
-	}
-
 	public void add(User user) throws SQLException {
 		this.jdbcContext.workWithStatementStrategy(new StatementStrategy() {	//인수로 익명 객체 생성
 			@Override
