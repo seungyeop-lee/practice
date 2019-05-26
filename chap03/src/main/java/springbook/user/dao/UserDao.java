@@ -13,22 +13,11 @@ import springbook.user.domain.User;
 
 public class UserDao {
 	
-	private DataSource dataSource;
-	private JdbcContext jdbcContext;
 	//스프링이 제공하는 JDBC 코드용 기본 템플릿
 	private JdbcTemplate jdbcTemplate;
 	
-	//DataSource 수정자 메소드가
-	//의존객체(JdbcContext)의 생성, 필요 의존성 주입(DataSource)의 역할을 맡는다.
 	public void setDataSource(DataSource dataSource) {
-		//JdbcContext객체는 UserDao와 긴밀한 관계이므로 UserDao내부에서 생성!
-		this.jdbcContext = new JdbcContext();
-		
-		this.jdbcContext.setDataSource(dataSource);
-		
 		this.jdbcTemplate = new JdbcTemplate(dataSource);
-		
-		this.dataSource = dataSource;
 	}
 	
 	public void add(User user) throws SQLException {
