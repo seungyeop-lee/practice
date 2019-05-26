@@ -80,6 +80,7 @@ public class UserDaoTest {
 	}
 	
 	//expected에 설정된 예외가 발생해야 테스트 성공!
+	//JdbcTemplate의 queryForObject메소드 등에서 기본적으로 사용하는 예외
 	@Test(expected = EmptyResultDataAccessException.class)
 	public void getUserFailure() throws SQLException {
 		

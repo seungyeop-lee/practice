@@ -1,14 +1,12 @@
 package springbook.user.dao;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import javax.sql.DataSource;
 
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 
 import springbook.user.domain.User;
 
@@ -40,32 +38,19 @@ public class UserDao {
 	
 	public User get(String id) throws SQLException {
 		
-		Connection c = dataSource.getConnection();
-
-		PreparedStatement ps = c.prepareStatement("select * from users where id = ?");
-		ps.setString(1, id);
-		
-		ResultSet rs = ps.executeQuery();
-		
-		User user = null;
-		if(rs.next()) {
-			user = new User();
-			user.setId(rs.getString("id"));
-			user.setName(rs.getString("name"));
-			user.setPassword(rs.getString("password"));
-		}
-		
-		rs.close();
-		ps.close();
-		c.close();
-		
-		//테스트코드를 성공시키기 위해 
-		//데이터가 없을 경우 EmptyResultDataAccessException을 발생시킴
-		if(user == null) {
-			throw new EmptyResultDataAccessException(1);
-		}
-		
-		return user;
+		return this.jdbcTemplate.queryForObject(
+				"select * from users where id = ?",	//SQL구문
+				new Object[] {id},	// ? 에 넣어 줄 인자 값
+				new RowMapper<User>() {	//결과 ResultSet의 1개 데이터(튜플)에 대한 매핑 전략
+					public User mapRow(ResultSet rs, int rowNum) throws SQLException {
+						User user = new User();
+						user.setId(rs.getString("id"));
+						user.setName(rs.getString("name"));
+						user.setPassword(rs.getString("password"));
+						return user;
+					};
+				}
+		);
 		
 	}
 	
