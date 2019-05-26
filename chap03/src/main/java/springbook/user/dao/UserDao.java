@@ -33,7 +33,8 @@ public class UserDao {
 	}
 	
 	public void add(User user) throws SQLException {
-		jdbcContext.executeSql("insert into users(id, name, password) values(?, ?, ?)",
+		//JdbcTemplate의 내부 콜백사용 메소드로 변경
+		this.jdbcTemplate.update("insert into users(id, name, password) values(?, ?, ?)",
 				user.getId(), user.getName(), user.getPassword());
 	}
 	
@@ -69,7 +70,8 @@ public class UserDao {
 	}
 	
 	public void deleteAll() throws SQLException {
-		jdbcContext.executeSql("delete from users");
+		//JdbcTemplate의 내부 콜백사용 메소드로 변경
+		this.jdbcTemplate.update("delete from users");
 	}
 	
 	public int getCount() throws SQLException {
