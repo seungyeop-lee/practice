@@ -7,11 +7,8 @@ import java.sql.SQLException;
 
 import javax.sql.DataSource;
 
-import org.springframework.dao.DataAccessException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.PreparedStatementCreator;
-import org.springframework.jdbc.core.ResultSetExtractor;
 
 import springbook.user.domain.User;
 
@@ -78,34 +75,8 @@ public class UserDao {
 	}
 	
 	public int getCount() throws SQLException {
-		//PreparedStatementCreator는 prepareStatement 객체 생성 전략을 담은 콜백 객체
-		return this.jdbcTemplate.query(new PreparedStatementCreator() {
-			@Override
-			public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
-				return con.prepareStatement("select count(*) from users");
-			}
-		//ResultSetExtractor는 ResultSet으로부터의 값 추출 전략을 담은 콜백 객체
-		}, new ResultSetExtractor<Integer>() {
-			@Override
-			public Integer extractData(ResultSet rs) throws SQLException, DataAccessException {
-				rs.next();
-				return rs.getInt(1);
-			}
-		});
-		
-		
-		/**
-		 * 람다식을 이용하면 더 간략하게 쓸 수 있다.
-		 * Spring 3.0.7에서는 ArrayIndexOutOfBoundsException발생으로 사용 불가
-		 * Spring 5.1.7에서 정상 작동 확인 완료
-		 */
-//		PreparedStatementCreator psc = con -> con.prepareStatement("select count(*) from users");
-//		ResultSetExtractor<Integer> rse = rs -> {
-//			rs.next();
-//			return rs.getInt(1);
-//		};
-//		return this.jdbcTemplate.query(psc, rse);
-		
+		//내장 콜백을 이용하는 sql실행 메소드
+		return this.jdbcTemplate.queryForInt("select count(*) from users");
 	}
 	
 }
