@@ -4,6 +4,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
 import java.sql.SQLException;
+import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -32,9 +33,9 @@ public class UserDaoTest {
 	//각 테스트를 실행하기 전, 테스트에 필요한 환경 구축
 	@Before
 	public void setUp() {
-		user1 = new User("id1111", "name1111", "ps1111");
-		user2 = new User("id2222", "name2222", "ps2222");
-		user3 = new User("id3333", "name3333", "ps3333");
+		user1 = new User("bbbb", "name1111", "ps1111");
+		user2 = new User("cccc", "name2222", "ps2222");
+		user3 = new User("aaaa", "name3333", "ps3333");
 	}
 	
 	//IDE에서는 main메소드를 만들지 않아도 테스트가 가능!
@@ -91,5 +92,40 @@ public class UserDaoTest {
 		//존재하지 않는 id를 인수로하여 get메소드를 호출
 		dao.get("unknown_id");
 		
+	}
+	
+	@Test
+	public void getAll() throws SQLException {
+		
+		dao.deleteAll();
+		
+		//데이터가 없는 경우에 대한 검증 코드
+		List<User> users0 = dao.getAll();
+		assertThat(users0.size(), is(0));
+		
+		dao.add(user1);	//Id: bbbb
+		List<User> users1 = dao.getAll();
+		assertThat(users1.size(), is(1));
+		checkSameUser(user1, users1.get(0));
+		
+		dao.add(user2);	//Id: cccc
+		List<User> users2 = dao.getAll();
+		assertThat(users2.size(), is(2));
+		checkSameUser(user1, users2.get(0));
+		checkSameUser(user2, users2.get(1));
+		
+		dao.add(user3);	//Id: aaaa
+		List<User> users3 = dao.getAll();
+		assertThat(users3.size(), is(3));
+		checkSameUser(user3, users3.get(0));
+		checkSameUser(user1, users3.get(1));
+		checkSameUser(user2, users3.get(2));
+		
+	}
+	
+	private void checkSameUser(User user1, User user2) {
+		assertThat(user1.getId(), is(user2.getId()));
+		assertThat(user1.getName(), is(user2.getName()));
+		assertThat(user1.getPassword(), is(user2.getPassword()));
 	}
 }
