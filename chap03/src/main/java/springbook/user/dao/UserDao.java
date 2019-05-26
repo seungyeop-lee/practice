@@ -13,6 +13,18 @@ import springbook.user.domain.User;
 
 public class UserDao {
 	
+	//재사용 가능하도록 RowMapper객체를 분리
+	private RowMapper<User> userMapper = new RowMapper<User>() {
+		@Override
+		public User mapRow(ResultSet rs, int rowNum) throws SQLException {
+			User user = new User();
+			user.setId(rs.getString("id"));
+			user.setName(rs.getString("name"));
+			user.setPassword(rs.getString("password"));
+			return user;			
+		}
+	};
+	
 	//스프링이 제공하는 JDBC 코드용 기본 템플릿
 	private JdbcTemplate jdbcTemplate;
 	
@@ -31,15 +43,7 @@ public class UserDao {
 		return this.jdbcTemplate.queryForObject(
 				"select * from users where id = ?",	//SQL구문
 				new Object[] {id},	// ? 에 넣어 줄 인자 값
-				new RowMapper<User>() {	//결과 ResultSet의 1개 데이터(튜플)에 대한 매핑 전략
-					public User mapRow(ResultSet rs, int rowNum) throws SQLException {
-						User user = new User();
-						user.setId(rs.getString("id"));
-						user.setName(rs.getString("name"));
-						user.setPassword(rs.getString("password"));
-						return user;
-					};
-				}
+				this.userMapper
 		);
 		
 	}
@@ -56,17 +60,7 @@ public class UserDao {
 	
 	public List<User> getAll() {
 		return this.jdbcTemplate.query("select * from users order by id",
-				new RowMapper<User>() {
-					@Override
-					public User mapRow(ResultSet rs, int rowNum) throws SQLException {
-						User user = new User();
-						user.setId(rs.getString("id"));
-						user.setName(rs.getString("name"));
-						user.setPassword(rs.getString("password"));
-						return user;
-					}
-				}
-		);
+				this.userMapper);
 	}
 	
 }
