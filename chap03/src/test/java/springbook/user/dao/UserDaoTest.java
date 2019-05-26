@@ -3,7 +3,6 @@ package springbook.user.dao;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
-import java.sql.SQLException;
 import java.util.List;
 
 import org.junit.Before;
@@ -40,7 +39,7 @@ public class UserDaoTest {
 	
 	//IDE에서는 main메소드를 만들지 않아도 테스트가 가능!
 	@Test
-	public void addAndGet() throws SQLException {
+	public void addAndGet() {
 		
 		dao.deleteAll();	//테스트 전 DB의 데이터를 전부 삭제
 		assertThat(dao.getCount(), is(0));	//dao.deleteAll()작동 확인
@@ -62,7 +61,7 @@ public class UserDaoTest {
 	}
 	
 	@Test
-	public void count() throws SQLException {
+	public void count() {
 		
 		//데이터를 1개 추가 할 때마다 count가 1씩 증가 하는 것을 확인
 		
@@ -83,7 +82,7 @@ public class UserDaoTest {
 	//expected에 설정된 예외가 발생해야 테스트 성공!
 	//JdbcTemplate의 queryForObject메소드 등에서 기본적으로 사용하는 예외
 	@Test(expected = EmptyResultDataAccessException.class)
-	public void getUserFailure() throws SQLException {
+	public void getUserFailure() {
 		
 		//테이블을 비운 후, 비워진 것을 확인
 		dao.deleteAll();
@@ -95,7 +94,7 @@ public class UserDaoTest {
 	}
 	
 	@Test
-	public void getAll() throws SQLException {
+	public void getAll() {
 		
 		dao.deleteAll();
 		

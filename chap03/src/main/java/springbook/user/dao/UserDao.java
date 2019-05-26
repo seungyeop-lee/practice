@@ -32,13 +32,13 @@ public class UserDao {
 		this.jdbcTemplate = new JdbcTemplate(dataSource);
 	}
 	
-	public void add(User user) throws SQLException {
+	public void add(User user) {
 		//JdbcTemplate의 내부 콜백사용 메소드로 변경
 		this.jdbcTemplate.update("insert into users(id, name, password) values(?, ?, ?)",
 				user.getId(), user.getName(), user.getPassword());
 	}
 	
-	public User get(String id) throws SQLException {
+	public User get(String id) {
 		
 		return this.jdbcTemplate.queryForObject(
 				"select * from users where id = ?",	//SQL구문
@@ -48,12 +48,12 @@ public class UserDao {
 		
 	}
 	
-	public void deleteAll() throws SQLException {
+	public void deleteAll() {
 		//JdbcTemplate의 내부 콜백사용 메소드로 변경
 		this.jdbcTemplate.update("delete from users");
 	}
 	
-	public int getCount() throws SQLException {
+	public int getCount() {
 		//내장 콜백을 이용하는 sql실행 메소드
 		return this.jdbcTemplate.queryForInt("select count(*) from users");
 	}
