@@ -1,15 +1,22 @@
 package springbook.user.dao;
 
+import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
+import java.sql.SQLException;
 import java.util.List;
+
+import javax.sql.DataSource;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.jdbc.support.SQLErrorCodeSQLExceptionTranslator;
+import org.springframework.jdbc.support.SQLExceptionTranslator;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
@@ -24,6 +31,9 @@ public class UserDaoTest {
 	//픽스처(테스트를 수행하는 데 필요한 정보나 오브젝트)
 	@Autowired
 	private UserDao dao;
+	
+	@Autowired
+	private DataSource dataSource;	//예외 전환 객체 생성에 필요
 	
 	private User user1;
 	private User user2;
@@ -120,6 +130,28 @@ public class UserDaoTest {
 		checkSameUser(user1, users3.get(1));
 		checkSameUser(user2, users3.get(2));
 		
+	}
+	
+	@Test(expected = DuplicateKeyException.class)	//key가 겹쳤을 경우 발생하는 예외에 대한 테스트
+	public void duplicateKey() {
+		dao.deleteAll();
+		
+		dao.add(user1);
+		dao.add(user1);
+	}
+	
+	@Test
+	public void sqlExceptionTranslate() {	//예외 전환 테스트
+		dao.deleteAll();
+		
+		try {
+			dao.add(user1);
+			dao.add(user1);
+		} catch (DuplicateKeyException e) {
+			SQLException sqlEx = (SQLException) e.getRootCause();	//처음 발생한 예외를 가져옴
+			SQLExceptionTranslator set = new SQLErrorCodeSQLExceptionTranslator(this.dataSource);	//예외 전환을 위한 객체 생성
+			assertThat(set.translate(null, null, sqlEx), is(instanceOf(DuplicateKeyException.class)));
+		}
 	}
 	
 	private void checkSameUser(User user1, User user2) {
