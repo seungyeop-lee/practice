@@ -71,4 +71,25 @@ public class UserServiceTest {
 		User userUpdate = userDao.get(user.getId());
 		assertThat(userUpdate.getLevel(), is(expectedLevel));
 	}
+	
+	@Test
+	public void add() {
+		userDao.deleteAll();
+		
+		User userWithLevel = users.get(4);	//레벨이 설정되어 있는 유저
+		User userWithoutLevel = users.get(0);	//레벨이 설정되어 있지않은 유저
+		userWithoutLevel.setLevel(null);
+		
+		userService.add(userWithLevel);
+		userService.add(userWithoutLevel);
+		
+		User userWithLevelRead = userDao.get(userWithLevel.getId());
+		User userWithoutLevelRead = userDao.get(userWithoutLevel.getId());
+		
+		//레벨이 설정되어 있을경우, 변경 없음
+		assertThat(userWithLevelRead.getLevel(), is(userWithLevel.getLevel()));
+		//레벨이 설정되어 있지 않을 경우, BASIC으로 초기화
+		assertThat(userWithoutLevelRead.getLevel(), is(Level.BASIC));
+	}
+
 }

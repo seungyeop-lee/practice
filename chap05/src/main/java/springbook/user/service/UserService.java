@@ -36,4 +36,11 @@ public class UserService {
 			}
 		}
 	}
+
+	public void add(User user) {
+		//레벨이 설정되어 있지않으면 BASIC으로 초기화
+		if(user.getLevel() == null) user.setLevel(Level.BASIC);
+		
+		userDao.add(user);
+	}
 }
