@@ -42,14 +42,7 @@ public class UserService {
 	
 	//레벨 상향 작업
 	private void upgradeLevel(User user) {
-		Level currentLevel = user.getLevel();
-		
-		if(currentLevel == Level.BASIC) {
-			user.setLevel(Level.SILVER);
-		} else if(currentLevel == Level.SILVER) {
-			user.setLevel(Level.GOLD);
-		}
-		
+		user.upgradeLevel();	//User객체 내부 데이터 수정 작업은 User객체에게 위임
 		userDao.update(user);
 	}
 
