@@ -153,6 +153,28 @@ public class UserDaoTest {
 		}
 	}
 	
+	@Test
+	public void update() {
+		dao.deleteAll();
+		
+		dao.add(user1);	//수정 할 사용자
+		dao.add(user2);	//수정하지 않을 사용자(where조건 확인용)
+		
+		//user1은 픽스처이지만 매 테스트마다 초기화되므로 수정해도 무관
+		user1.setName("name4444");
+		user1.setPassword("ps4444");
+		user1.setLevel(Level.GOLD);
+		user1.setLogin(1000);
+		user1.setRecommend(999);
+		
+		dao.update(user1);
+		
+		User user1update = dao.get(user1.getId());
+		checkSameUser(user1, user1update);
+		User user2update = dao.get(user2.getId());
+		checkSameUser(user2, user2update);
+	}
+	
 	private void checkSameUser(User user1, User user2) {
 		assertThat(user1.getId(), is(user2.getId()));
 		assertThat(user1.getName(), is(user2.getName()));
