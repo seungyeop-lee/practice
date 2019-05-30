@@ -7,6 +7,11 @@ import springbook.user.domain.Level;
 import springbook.user.domain.User;
 
 public class UserService {
+	
+	//실버와 골드레벨의 최소 조건을 상수로 설정
+	public static final int MIN_LOGCOUNT_FOR_SILVER = 50;
+	public static final int MIN_RECCOMEND_FOR_GOLD = 30;
+	
 	UserDao userDao;
 	
 	public void setUserDao(UserDao userDao) {
@@ -30,9 +35,9 @@ public class UserService {
 		//현재 레벨에 따른 조건 확인 및 결과 반환
 		switch (currentLevel) {
 		case BASIC:
-			return user.getLogin() >= 50;
+			return user.getLogin() >= MIN_LOGCOUNT_FOR_SILVER;
 		case SILVER:
-			return user.getRecommend() >= 30;
+			return user.getRecommend() >= MIN_RECCOMEND_FOR_GOLD;
 		case GOLD:
 			return false;
 		default:

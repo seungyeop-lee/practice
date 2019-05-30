@@ -3,6 +3,8 @@ package springbook.user.service;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
+import static springbook.user.service.UserService.MIN_LOGCOUNT_FOR_SILVER;
+import static springbook.user.service.UserService.MIN_RECCOMEND_FOR_GOLD;
 
 import java.util.Arrays;
 import java.util.List;
@@ -34,11 +36,12 @@ public class UserServiceTest {
 	public void setUp() {
 		//경계값으로 테스트 데이터를 만듦 (테스트 신뢰성 향상)
 		users = Arrays.asList(
-					new User("a", "n1", "p1", Level.BASIC, 49, 0),
-					new User("b", "n2", "p2", Level.BASIC, 50, 0),
-					new User("c", "n3", "p3", Level.SILVER, 60, 29),
-					new User("d", "n4", "p4", Level.SILVER, 60, 30),
-					new User("e", "n5", "p5", Level.GOLD, 100, 100)
+					//상수를 사용함으로서 테스트 데이터의 목적이 분명해지는 효과가 생김
+					new User("a", "n1", "p1", Level.BASIC, MIN_LOGCOUNT_FOR_SILVER-1, 0),
+					new User("b", "n2", "p2", Level.BASIC, MIN_LOGCOUNT_FOR_SILVER, 0),
+					new User("c", "n3", "p3", Level.SILVER, 60, MIN_RECCOMEND_FOR_GOLD-1),
+					new User("d", "n4", "p4", Level.SILVER, 60, MIN_RECCOMEND_FOR_GOLD),
+					new User("e", "n5", "p5", Level.GOLD, 100, Integer.MAX_VALUE)
 				);
 	}
 	
@@ -60,16 +63,22 @@ public class UserServiceTest {
 		userService.upgradeLevels();
 		
 		//상향된 레벨 적용확인
-		checkLevel(users.get(0), Level.BASIC);
-		checkLevel(users.get(1), Level.SILVER);
-		checkLevel(users.get(2), Level.SILVER);
-		checkLevel(users.get(3), Level.GOLD);
-		checkLevel(users.get(4), Level.GOLD);
+		checkLevelUpgraded(users.get(0), false);
+		checkLevelUpgraded(users.get(1), true);
+		checkLevelUpgraded(users.get(2), false);
+		checkLevelUpgraded(users.get(3), true);
+		checkLevelUpgraded(users.get(4), false);
 	}
 
-	private void checkLevel(User user, Level expectedLevel) {
+	//해당유저가 레벨 상향 대상이라면 레벨이 상향되었는지 확인
+	//레벨 상향으로 인해 어떤 레벨이 되는가는 객체에 위임하여 확인 
+	private void checkLevelUpgraded(User user, boolean upgraded) {
 		User userUpdate = userDao.get(user.getId());
-		assertThat(userUpdate.getLevel(), is(expectedLevel));
+		if(upgraded) {
+			assertThat(userUpdate.getLevel(), is(user.getLevel().nextLevel()));
+		} else {
+			assertThat(userUpdate.getLevel(), is(user.getLevel()));
+		}
 	}
 	
 	@Test
