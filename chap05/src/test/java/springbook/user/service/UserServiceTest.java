@@ -3,6 +3,7 @@ package springbook.user.service;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.fail;
 import static springbook.user.service.UserService.MIN_LOGCOUNT_FOR_SILVER;
 import static springbook.user.service.UserService.MIN_RECCOMEND_FOR_GOLD;
 
@@ -13,6 +14,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
@@ -100,5 +102,54 @@ public class UserServiceTest {
 		//레벨이 설정되어 있지 않을 경우, BASIC으로 초기화
 		assertThat(userWithoutLevelRead.getLevel(), is(Level.BASIC));
 	}
+	
+	@Test
+	@DirtiesContext	//스프링으로 부터 DI받은 빈의 내부 상태를 수정했다는 것을 알림, 다른 테스트 전에 사용된 빈의 초기화 진행
+	public void upgradeAllOrNothing() {
+		//테스트용 레벨 상향 정책 준비
+		TestUserLevelUpgradePolicy upgradePolicy = new TestUserLevelUpgradePolicy(users.get(3).getId());
+		upgradePolicy.setUserDao(userDao);
+		
+		//테스트용 레벨 상향 정책을 UserService에 수동DI
+		userService.setUserLevelUpgradePolicy(upgradePolicy);
+		
+		//테스트를 위한 데이터 초기화
+		userDao.deleteAll();
+		for(User user : users) {
+			userDao.add(user);
+		}
+		
+		//레벨 상향 로직 수행, 중간에 예외 발생
+		try {
+			userService.upgradeLevels();
+			fail("TestUserLevelUpgradePolicyException expected");
+		} catch (TestUserLevelUpgradePolicyException e) {
+		}
+		
+		//예외 발생 전 수행된 레벨 상향이 반영되지 않았음을 기대함
+		checkLevelUpgraded(users.get(1), false);	//트랜젝션이 적용되지 않았음으로 실패
+	}
+	
+	//테스트용 레벨 상향 정책
+	static class TestUserLevelUpgradePolicy extends CommonUserLevelUpgradePolicy {
+		//예외가 발생하길 원하는 id
+		private String id;
+		
+		private TestUserLevelUpgradePolicy(String id) {
+			this.id = id;
+		}
+		
+		@Override
+		public void upgradeLevel(User user) {
+			if(user.getId().equals(this.id)) {
+				throw new TestUserLevelUpgradePolicyException();
+			}
+			super.upgradeLevel(user);
+		}
+		
+	}
+	
+	@SuppressWarnings("serial")
+	static class TestUserLevelUpgradePolicyException extends RuntimeException {}
 
 }
