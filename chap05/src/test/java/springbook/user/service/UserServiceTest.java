@@ -53,7 +53,7 @@ public class UserServiceTest {
 	}
 	
 	@Test
-	public void upgradeLevels() {
+	public void upgradeLevels() throws Exception {
 		
 		//DB초기화 후 테스트 데이터 add
 		userDao.deleteAll();
@@ -105,7 +105,7 @@ public class UserServiceTest {
 	
 	@Test
 	@DirtiesContext	//스프링으로 부터 DI받은 빈의 내부 상태를 수정했다는 것을 알림, 다른 테스트 전에 사용된 빈의 초기화 진행
-	public void upgradeAllOrNothing() {
+	public void upgradeAllOrNothing() throws Exception {
 		//테스트용 레벨 상향 정책 준비
 		TestUserLevelUpgradePolicy upgradePolicy = new TestUserLevelUpgradePolicy(users.get(3).getId());
 		upgradePolicy.setUserDao(userDao);
