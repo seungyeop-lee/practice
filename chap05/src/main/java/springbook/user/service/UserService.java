@@ -13,42 +13,23 @@ public class UserService {
 	public static final int MIN_RECCOMEND_FOR_GOLD = 30;
 	
 	UserDao userDao;
+	UserLevelUpgradePolicy upgradePolicy;
 	
 	public void setUserDao(UserDao userDao) {
 		this.userDao = userDao;
+	}
+	public void setUserLevelUpgradePolicy(UserLevelUpgradePolicy upgradePolicy) {
+		this.upgradePolicy = upgradePolicy;
 	}
 	
 	//전체 유저를 대상으로 레벨 상향 대상자의 레벨 상향 처리
 	public void upgradeLevels() {
 		List<User> users = userDao.getAll();
 		for(User user : users) {
-			if(canUpgradeLevel(user)) {
-				upgradeLevel(user);
+			if(upgradePolicy.canUpgradeLevel(user)) {
+				upgradePolicy.upgradeLevel(user);
 			}
 		}
-	}
-
-	//레벨 상향 대상유무 확인
-	private boolean canUpgradeLevel(User user) {
-		Level currentLevel = user.getLevel();
-		
-		//현재 레벨에 따른 조건 확인 및 결과 반환
-		switch (currentLevel) {
-		case BASIC:
-			return user.getLogin() >= MIN_LOGCOUNT_FOR_SILVER;
-		case SILVER:
-			return user.getRecommend() >= MIN_RECCOMEND_FOR_GOLD;
-		case GOLD:
-			return false;
-		default:
-			throw new IllegalArgumentException("Unknown Level: " + currentLevel);
-		}
-	}
-	
-	//레벨 상향 작업
-	private void upgradeLevel(User user) {
-		user.upgradeLevel();	//User객체 내부 데이터 수정 작업은 User객체에게 위임
-		userDao.update(user);
 	}
 
 	public void add(User user) {
