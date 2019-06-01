@@ -2,9 +2,6 @@ package springbook.user.service;
 
 import java.util.List;
 
-import javax.sql.DataSource;
-
-import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.DefaultTransactionDefinition;
@@ -21,7 +18,7 @@ public class UserService {
 	
 	UserDao userDao;
 	UserLevelUpgradePolicy upgradePolicy;
-	private DataSource dataSource;	//트랜잭션 적용을 위한 Connection객체 취득용 DataSource
+	private PlatformTransactionManager transactionManager;	//DI형식으로 전환
 	
 	public void setUserDao(UserDao userDao) {
 		this.userDao = userDao;
@@ -29,16 +26,14 @@ public class UserService {
 	public void setUserLevelUpgradePolicy(UserLevelUpgradePolicy upgradePolicy) {
 		this.upgradePolicy = upgradePolicy;
 	}
-	public void setDataSource(DataSource dataSource) {
-		this.dataSource = dataSource;
+	public void setTransactionManager(PlatformTransactionManager transactionManager) {
+		this.transactionManager = transactionManager;
 	}
 	
 	//전체 유저를 대상으로 레벨 상향 대상자의 레벨 상향 처리
 	public void upgradeLevels() throws Exception {
-		//트랜잭션 매니저로 JDBC용 트랜잭션 매니저 생성
-		PlatformTransactionManager transactionManager = new DataSourceTransactionManager(dataSource);
 		//트랜잭션 정보 획득
-		TransactionStatus status = transactionManager.getTransaction(new DefaultTransactionDefinition());
+		TransactionStatus status = this.transactionManager.getTransaction(new DefaultTransactionDefinition());
 		
 		try {
 			List<User> users = userDao.getAll();
@@ -47,9 +42,9 @@ public class UserService {
 					upgradePolicy.upgradeLevel(user);
 				}
 			}
-			transactionManager.commit(status);
+			this.transactionManager.commit(status);
 		} catch (Exception e) {
-			transactionManager.rollback(status);
+			this.transactionManager.rollback(status);
 			throw e;
 		}	//트랜잭션 동기화 작업 종료 및 정리가 필요없음
 	}

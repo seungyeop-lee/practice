@@ -127,7 +127,7 @@ public class UserServiceTest {
 		}
 		
 		//예외 발생 전 수행된 레벨 상향이 반영되지 않았음을 기대함
-		checkLevelUpgraded(users.get(1), false);	//트랜젝션이 적용되지 않았음으로 실패
+		checkLevelUpgraded(users.get(1), false);
 	}
 	
 	//테스트용 레벨 상향 정책
