@@ -1,12 +1,13 @@
 package springbook.user.service;
 
-import java.sql.Connection;
 import java.util.List;
 
 import javax.sql.DataSource;
 
-import org.springframework.jdbc.datasource.DataSourceUtils;
-import org.springframework.transaction.support.TransactionSynchronizationManager;
+import org.springframework.jdbc.datasource.DataSourceTransactionManager;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.TransactionStatus;
+import org.springframework.transaction.support.DefaultTransactionDefinition;
 
 import springbook.user.dao.UserDao;
 import springbook.user.domain.Level;
@@ -34,11 +35,10 @@ public class UserService {
 	
 	//전체 유저를 대상으로 레벨 상향 대상자의 레벨 상향 처리
 	public void upgradeLevels() throws Exception {
-		//트랜잭션 동기화 관리자를 이용한 초기화
-		TransactionSynchronizationManager.initSynchronization();
-		//동기화가 적용된 Connection생성
-		Connection c = DataSourceUtils.getConnection(dataSource);
-		c.setAutoCommit(false);
+		//트랜잭션 매니저로 JDBC용 트랜잭션 매니저 생성
+		PlatformTransactionManager transactionManager = new DataSourceTransactionManager(dataSource);
+		//트랜잭션 정보 획득
+		TransactionStatus status = transactionManager.getTransaction(new DefaultTransactionDefinition());
 		
 		try {
 			List<User> users = userDao.getAll();
@@ -47,17 +47,11 @@ public class UserService {
 					upgradePolicy.upgradeLevel(user);
 				}
 			}
-			c.commit();
+			transactionManager.commit(status);
 		} catch (Exception e) {
-			c.rollback();
+			transactionManager.rollback(status);
 			throw e;
-		} finally {
-			//Connection close
-			DataSourceUtils.releaseConnection(c, dataSource);
-			//동기화 작업 종료 및 정리
-			TransactionSynchronizationManager.unbindResource(dataSource);
-			TransactionSynchronizationManager.clearSynchronization();
-		}
+		}	//트랜잭션 동기화 작업 종료 및 정리가 필요없음
 	}
 
 	public void add(User user) {
