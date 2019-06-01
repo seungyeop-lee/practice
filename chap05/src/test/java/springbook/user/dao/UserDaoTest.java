@@ -43,9 +43,9 @@ public class UserDaoTest {
 	//각 테스트를 실행하기 전, 테스트에 필요한 환경 구축
 	@Before
 	public void setUp() {
-		user1 = new User("bbbb", "name1111", "ps1111", Level.BASIC, 1, 0);
-		user2 = new User("cccc", "name2222", "ps2222", Level.SILVER, 55, 10);
-		user3 = new User("aaaa", "name3333", "ps3333", Level.GOLD, 100, 40);
+		user1 = new User("bbbb", "name1111", "ps1111", Level.BASIC, 1, 0, "bbbb@email.com");
+		user2 = new User("cccc", "name2222", "ps2222", Level.SILVER, 55, 10, "cccc@email.com");
+		user3 = new User("aaaa", "name3333", "ps3333", Level.GOLD, 100, 40, "aaaa@email.com");
 	}
 	
 	//IDE에서는 main메소드를 만들지 않아도 테스트가 가능!
@@ -166,6 +166,7 @@ public class UserDaoTest {
 		user1.setLevel(Level.GOLD);
 		user1.setLogin(1000);
 		user1.setRecommend(999);
+		user1.setEmail("unknown@email.com");
 		
 		dao.update(user1);
 		
@@ -182,5 +183,6 @@ public class UserDaoTest {
 		assertThat(user1.getLevel(), is(user2.getLevel()));
 		assertThat(user1.getLogin(), is(user2.getLogin()));
 		assertThat(user1.getRecommend(), is(user2.getRecommend()));
+		assertThat(user1.getEmail(), is(user2.getEmail()));
 	}
 }

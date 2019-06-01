@@ -39,11 +39,11 @@ public class UserServiceTest {
 		//경계값으로 테스트 데이터를 만듦 (테스트 신뢰성 향상)
 		users = Arrays.asList(
 					//상수를 사용함으로서 테스트 데이터의 목적이 분명해지는 효과가 생김
-					new User("a", "n1", "p1", Level.BASIC, MIN_LOGCOUNT_FOR_SILVER-1, 0),
-					new User("b", "n2", "p2", Level.BASIC, MIN_LOGCOUNT_FOR_SILVER, 0),
-					new User("c", "n3", "p3", Level.SILVER, 60, MIN_RECCOMEND_FOR_GOLD-1),
-					new User("d", "n4", "p4", Level.SILVER, 60, MIN_RECCOMEND_FOR_GOLD),
-					new User("e", "n5", "p5", Level.GOLD, 100, Integer.MAX_VALUE)
+					new User("a", "n1", "p1", Level.BASIC, MIN_LOGCOUNT_FOR_SILVER-1, 0, "a@email.com"),
+					new User("b", "n2", "p2", Level.BASIC, MIN_LOGCOUNT_FOR_SILVER, 0, "b@email.com"),
+					new User("c", "n3", "p3", Level.SILVER, 60, MIN_RECCOMEND_FOR_GOLD-1, "c@email.com"),
+					new User("d", "n4", "p4", Level.SILVER, 60, MIN_RECCOMEND_FOR_GOLD, "d@email.com"),
+					new User("e", "n5", "p5", Level.GOLD, 100, Integer.MAX_VALUE, "e@email.com")
 				);
 	}
 	

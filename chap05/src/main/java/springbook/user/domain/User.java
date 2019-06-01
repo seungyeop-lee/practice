@@ -8,22 +8,18 @@ public class User {
 	Level level;
 	int login;
 	int recommend;
+	String email;
 	
-	public User(String id, String name, String password, Level level, int login, int recommend) {
+	public User(String id, String name, String password, Level level, int login, int recommend, String email) {
 		this.id = id;
 		this.name = name;
 		this.password = password;
 		this.level = level;
 		this.login = login;
 		this.recommend = recommend;
+		this.email = email;
 	}
 
-	public User(String id, String name, String password) {
-		this.id = id;
-		this.name = name;
-		this.password = password;
-	}
-	
 	public User() {
 	}
 	
@@ -63,7 +59,13 @@ public class User {
 	public void setRecommend(int recommend) {
 		this.recommend = recommend;
 	}
-	
+	public String getEmail() {
+		return email;
+	}
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
 	//레벨 상향 작업(User객체 내 Level상향)
 	public void upgradeLevel() {
 		Level nextLevel = this.level.nextLevel();
