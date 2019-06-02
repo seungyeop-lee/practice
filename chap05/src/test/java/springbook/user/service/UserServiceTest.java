@@ -14,6 +14,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.MailSender;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -31,6 +32,9 @@ public class UserServiceTest {
 	
 	@Autowired
 	UserDao userDao;
+	
+	@Autowired
+	MailSender mailSender;
 	
 	List<User> users;
 	
@@ -109,6 +113,7 @@ public class UserServiceTest {
 		//테스트용 레벨 상향 정책 준비
 		TestUserLevelUpgradePolicy upgradePolicy = new TestUserLevelUpgradePolicy(users.get(3).getId());
 		upgradePolicy.setUserDao(userDao);
+		upgradePolicy.setMailSender(mailSender);
 		
 		//테스트용 레벨 상향 정책을 UserService에 수동DI
 		userService.setUserLevelUpgradePolicy(upgradePolicy);

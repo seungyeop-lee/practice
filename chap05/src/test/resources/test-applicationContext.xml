@@ -23,6 +23,10 @@
 	
 	<bean id="userLevelUpgradePolicy" class="springbook.user.service.CommonUserLevelUpgradePolicy">
 		<property name="userDao" ref="userDao"></property>
+		<property name="mailSender" ref="mailSender"></property>
+	</bean>
+	
+	<bean id="mailSender" class="springbook.user.service.DummyMailSender">
 	</bean>
 	
 	<bean id="userDao" class="springbook.user.dao.UserDaoJdbc">
