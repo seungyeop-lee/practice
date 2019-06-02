@@ -36,6 +36,9 @@ public class UserServiceTest {
 	@Autowired
 	MailSender mailSender;
 	
+	@Autowired
+	CommonUserLevelUpgradePolicy upgradePolicy;
+	
 	List<User> users;
 	
 	@Before
@@ -57,6 +60,7 @@ public class UserServiceTest {
 	}
 	
 	@Test
+	@DirtiesContext
 	public void upgradeLevels() throws Exception {
 		
 		//DB초기화 후 테스트 데이터 add
@@ -64,6 +68,11 @@ public class UserServiceTest {
 		for(User user : users) {
 			userDao.add(user);
 		}
+		
+		//메일 발송 목 객체 생성 및 수동 DI
+		MockMailSender mockMailSender = new MockMailSender();
+		upgradePolicy.setMailSender(mockMailSender);
+		userService.setUserLevelUpgradePolicy(upgradePolicy);
 		
 		//레벨 상향
 		userService.upgradeLevels();
@@ -74,6 +83,13 @@ public class UserServiceTest {
 		checkLevelUpgraded(users.get(2), false);
 		checkLevelUpgraded(users.get(3), true);
 		checkLevelUpgraded(users.get(4), false);
+		
+		//목 객체의 정보를 통해 예상결과와 일치하는지 확인
+		List<String> request = mockMailSender.getRequests();
+		assertThat(request.size(), is(2));
+		assertThat(request.get(0), is(users.get(1).getEmail()));
+		assertThat(request.get(1), is(users.get(3).getEmail()));
+		
 	}
 
 	//해당유저가 레벨 상향 대상이라면 레벨이 상향되었는지 확인
