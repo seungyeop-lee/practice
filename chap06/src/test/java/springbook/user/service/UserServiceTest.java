@@ -4,8 +4,8 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
-import static springbook.user.service.UserService.MIN_LOGCOUNT_FOR_SILVER;
-import static springbook.user.service.UserService.MIN_RECCOMEND_FOR_GOLD;
+import static springbook.user.service.UserServiceImpl.MIN_LOGCOUNT_FOR_SILVER;
+import static springbook.user.service.UserServiceImpl.MIN_RECCOMEND_FOR_GOLD;
 
 import java.util.Arrays;
 import java.util.List;
@@ -14,6 +14,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.mail.MailSender;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
@@ -38,6 +39,9 @@ public class UserServiceTest {
 	
 	@Autowired
 	CommonUserLevelUpgradePolicy upgradePolicy;
+	
+	@Autowired
+	DataSourceTransactionManager transactionManager;
 	
 	List<User> users;
 	
@@ -72,7 +76,6 @@ public class UserServiceTest {
 		//메일 발송 목 객체 생성 및 수동 DI
 		MockMailSender mockMailSender = new MockMailSender();
 		upgradePolicy.setMailSender(mockMailSender);
-		userService.setUserLevelUpgradePolicy(upgradePolicy);
 		
 		//레벨 상향
 		userService.upgradeLevels();
@@ -131,8 +134,16 @@ public class UserServiceTest {
 		upgradePolicy.setUserDao(userDao);
 		upgradePolicy.setMailSender(mailSender);
 		
+		//기본 UserService객체 생성
+		UserServiceImpl userServiceImpl = new UserServiceImpl();
+		userServiceImpl.setUserDao(userDao);
 		//테스트용 레벨 상향 정책을 UserService에 수동DI
-		userService.setUserLevelUpgradePolicy(upgradePolicy);
+		userServiceImpl.setUserLevelUpgradePolicy(upgradePolicy);
+		
+		//트랜잭션 적용 UserService객체 생성
+		UserServiceTx txUserService = new UserServiceTx();
+		txUserService.setTransactionManager(transactionManager);
+		txUserService.setUserService(userServiceImpl);
 		
 		//테스트를 위한 데이터 초기화
 		userDao.deleteAll();
@@ -142,7 +153,7 @@ public class UserServiceTest {
 		
 		//레벨 상향 로직 수행, 중간에 예외 발생
 		try {
-			userService.upgradeLevels();
+			txUserService.upgradeLevels();
 			fail("TestUserLevelUpgradePolicyException expected");
 		} catch (TestUserLevelUpgradePolicyException e) {
 		}
