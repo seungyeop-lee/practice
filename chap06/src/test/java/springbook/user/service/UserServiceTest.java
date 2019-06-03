@@ -66,28 +66,30 @@ public class UserServiceTest {
 	@Test
 	@DirtiesContext
 	public void upgradeLevels() throws Exception {
-		
-		//DB초기화 후 테스트 데이터 add
-		userDao.deleteAll();
-		for(User user : users) {
-			userDao.add(user);
-		}
-		
-		//메일 발송 목 객체 생성 및 수동 DI
+		//UserDao의 목 객체 생성
+		MockUserDao mockUserDao = new MockUserDao(users);
+		//메일 발송 목 객체 생성
 		MockMailSender mockMailSender = new MockMailSender();
+		
+		//목 객체 수동 DI
+		upgradePolicy.setUserDao(mockUserDao);
 		upgradePolicy.setMailSender(mockMailSender);
 		
+		//UserServiceImpl객체 생성 및 수동 DI
+		UserServiceImpl userServiceImpl = new UserServiceImpl();
+		userServiceImpl.setUserDao(mockUserDao);
+		userServiceImpl.setUserLevelUpgradePolicy(upgradePolicy);
+		
 		//레벨 상향
-		userService.upgradeLevels();
+		userServiceImpl.upgradeLevels();
 		
-		//상향된 레벨 적용확인
-		checkLevelUpgraded(users.get(0), false);
-		checkLevelUpgraded(users.get(1), true);
-		checkLevelUpgraded(users.get(2), false);
-		checkLevelUpgraded(users.get(3), true);
-		checkLevelUpgraded(users.get(4), false);
+		//목 객체를 통해 레벨 상향 작업 유무 확인
+		List<User> updated = mockUserDao.getUpdated();
+		assertThat(updated.size(), is(2));
+		checkUserAndLevel(updated.get(0), "b", Level.SILVER);
+		checkUserAndLevel(updated.get(1), "d", Level.GOLD);
 		
-		//목 객체의 정보를 통해 예상결과와 일치하는지 확인
+		//목 객체를 통해 메일 발송 유무 확인
 		List<String> request = mockMailSender.getRequests();
 		assertThat(request.size(), is(2));
 		assertThat(request.get(0), is(users.get(1).getEmail()));
@@ -97,13 +99,9 @@ public class UserServiceTest {
 
 	//해당유저가 레벨 상향 대상이라면 레벨이 상향되었는지 확인
 	//레벨 상향으로 인해 어떤 레벨이 되는가는 객체에 위임하여 확인 
-	private void checkLevelUpgraded(User user, boolean upgraded) {
-		User userUpdate = userDao.get(user.getId());
-		if(upgraded) {
-			assertThat(userUpdate.getLevel(), is(user.getLevel().nextLevel()));
-		} else {
-			assertThat(userUpdate.getLevel(), is(user.getLevel()));
-		}
+	private void checkUserAndLevel(User userUpdate, String expectId, Level expectLevel) {
+		assertThat(userUpdate.getId(), is(expectId));
+		assertThat(userUpdate.getLevel(), is(expectLevel));
 	}
 	
 	@Test
@@ -159,7 +157,7 @@ public class UserServiceTest {
 		}
 		
 		//예외 발생 전 수행된 레벨 상향이 반영되지 않았음을 기대함
-		checkLevelUpgraded(users.get(1), false);
+		checkUserAndLevel(users.get(1), "b", Level.BASIC);
 	}
 	
 	//테스트용 레벨 상향 정책
