@@ -36,17 +36,22 @@ public class UserService {
 		TransactionStatus status = this.transactionManager.getTransaction(new DefaultTransactionDefinition());
 		
 		try {
-			List<User> users = userDao.getAll();
-			for(User user : users) {
-				if(upgradePolicy.canUpgradeLevel(user)) {
-					upgradePolicy.upgradeLevel(user);
-				}
-			}
+			upgradeLevelsInternal();
 			this.transactionManager.commit(status);
 		} catch (Exception e) {
 			this.transactionManager.rollback(status);
 			throw e;
 		}	//트랜잭션 동기화 작업 종료 및 정리가 필요없음
+	}
+	
+	//레벨 상향 핵심로직을 메소드로 분리
+	private void upgradeLevelsInternal() {
+		List<User> users = userDao.getAll();
+		for(User user : users) {
+			if(upgradePolicy.canUpgradeLevel(user)) {
+				upgradePolicy.upgradeLevel(user);
+			}
+		}
 	}
 
 	public void add(User user) {
