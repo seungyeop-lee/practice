@@ -4,6 +4,11 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import static springbook.user.service.UserServiceImpl.MIN_LOGCOUNT_FOR_SILVER;
 import static springbook.user.service.UserServiceImpl.MIN_RECCOMEND_FOR_GOLD;
 
@@ -13,9 +18,11 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.mail.MailSender;
+import org.springframework.mail.SimpleMailMessage;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -102,6 +109,45 @@ public class UserServiceTest {
 	private void checkUserAndLevel(User userUpdate, String expectId, Level expectLevel) {
 		assertThat(userUpdate.getId(), is(expectId));
 		assertThat(userUpdate.getLevel(), is(expectLevel));
+	}
+	
+	//mockito를 이용한 레벨 상향 로직 테스트
+	@Test
+	@DirtiesContext
+	public void mockUpgradeLevels() throws Exception {
+		
+		//UserDao의 목 객체 생성 및 기대하는 반환값 설정
+		UserDao mockUserDao = mock(UserDao.class);
+		when(mockUserDao.getAll()).thenReturn(this.users);
+		
+		//MailSender의 목 객체 생성
+		MailSender mockMailSender = mock(MailSender.class);
+		
+		//정책 객체 생성 후 목 객체 수동 DI
+		CommonUserLevelUpgradePolicy policy = new CommonUserLevelUpgradePolicy();
+		policy.setMailSender(mockMailSender);
+		policy.setUserDao(mockUserDao);
+		
+		//UserService객체 생성 후 목 객체 수동 DI
+		UserServiceImpl userServiceImpl = new UserServiceImpl();
+		userServiceImpl.setUserDao(mockUserDao);
+		userServiceImpl.setUserLevelUpgradePolicy(policy);
+		
+		userServiceImpl.upgradeLevels();
+		
+		//레벨 상향 작업 수행결과 검증
+		verify(mockUserDao, times(2)).update(any(User.class));
+		verify(mockUserDao).update(users.get(1));
+		assertThat(users.get(1).getLevel(), is(Level.SILVER));
+		verify(mockUserDao).update(users.get(3));
+		assertThat(users.get(3).getLevel(), is(Level.GOLD));
+		
+		//레벨 상향에 따른 메일 발송 수행결과 검증
+		ArgumentCaptor<SimpleMailMessage> mailMessageArg = ArgumentCaptor.forClass(SimpleMailMessage.class);
+		verify(mockMailSender, times(2)).send(mailMessageArg.capture());
+		List<SimpleMailMessage> mailMessages = mailMessageArg.getAllValues();
+		assertThat(mailMessages.get(0).getTo()[0], is(users.get(1).getEmail()));
+		assertThat(mailMessages.get(1).getTo()[0], is(users.get(3).getEmail()));
 	}
 	
 	@Test
