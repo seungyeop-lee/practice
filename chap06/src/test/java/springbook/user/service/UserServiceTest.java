@@ -12,6 +12,7 @@ import static org.mockito.Mockito.when;
 import static springbook.user.service.UserServiceImpl.MIN_LOGCOUNT_FOR_SILVER;
 import static springbook.user.service.UserServiceImpl.MIN_RECCOMEND_FOR_GOLD;
 
+import java.lang.reflect.Proxy;
 import java.util.Arrays;
 import java.util.List;
 
@@ -185,9 +186,14 @@ public class UserServiceTest {
 		userServiceImpl.setUserLevelUpgradePolicy(upgradePolicy);
 		
 		//트랜잭션 적용 UserService객체 생성
-		UserServiceTx txUserService = new UserServiceTx();
-		txUserService.setTransactionManager(transactionManager);
-		txUserService.setUserService(userServiceImpl);
+		TransactionHandler txHandler = new TransactionHandler();
+		txHandler.setTarget(userServiceImpl);
+		txHandler.setTransactionManager(transactionManager);
+		txHandler.setPattern("upgradeLevels");
+		UserService txUserService = (UserService)Proxy.newProxyInstance(
+				getClass().getClassLoader(), 
+				new Class[] {UserService.class}, 
+				txHandler);
 		
 		//테스트를 위한 데이터 초기화
 		userDao.deleteAll();
