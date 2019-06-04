@@ -26,4 +26,14 @@ public class HelloUppercase implements Hello {
 	public String sayThankYou(String name) {
 		return hello.sayThankYou(name).toUpperCase();
 	}
+
+	@Override
+	public String saidHello(String name) {
+		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	public Integer sayNumber(String name) {
+		throw new UnsupportedOperationException();
+	}
 }

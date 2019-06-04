@@ -17,4 +17,14 @@ public class HelloTarget implements Hello {
 		return "Thank You " + name;
 	}
 
+	@Override
+	public String saidHello(String name) {
+		return "Hello " + name;
+	}
+
+	@Override
+	public Integer sayNumber(String num) {
+		return Integer.parseInt(num);
+	}
+
 }

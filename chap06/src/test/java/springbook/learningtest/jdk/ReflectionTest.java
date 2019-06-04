@@ -53,6 +53,9 @@ public class ReflectionTest {
 		assertThat(proxiedHello.sayHello("Toby"), is("HELLO TOBY"));
 		assertThat(proxiedHello.sayHi("Toby"), is("HI TOBY"));
 		assertThat(proxiedHello.sayThankYou("Toby"), is("THANK YOU TOBY"));
+		
+		assertThat(proxiedHello.saidHello("Toby"), is("Hello Toby"));
+		assertThat(proxiedHello.sayNumber("3"), is(3));
 	}
 	
 }
