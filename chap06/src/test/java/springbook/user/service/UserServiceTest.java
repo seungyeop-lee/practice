@@ -12,7 +12,6 @@ import static org.mockito.Mockito.when;
 import static springbook.user.service.UserServiceImpl.MIN_LOGCOUNT_FOR_SILVER;
 import static springbook.user.service.UserServiceImpl.MIN_RECCOMEND_FOR_GOLD;
 
-import java.lang.reflect.Proxy;
 import java.util.Arrays;
 import java.util.List;
 
@@ -21,6 +20,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.mail.MailSender;
 import org.springframework.mail.SimpleMailMessage;
@@ -35,6 +35,9 @@ import springbook.user.domain.User;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = "/test-applicationContext.xml")
 public class UserServiceTest {
+	
+	@Autowired
+	ApplicationContext context;
 	
 	@Autowired
 	UserService userService;
@@ -186,14 +189,9 @@ public class UserServiceTest {
 		userServiceImpl.setUserLevelUpgradePolicy(upgradePolicy);
 		
 		//트랜잭션 적용 UserService객체 생성
-		TransactionHandler txHandler = new TransactionHandler();
-		txHandler.setTarget(userServiceImpl);
-		txHandler.setTransactionManager(transactionManager);
-		txHandler.setPattern("upgradeLevels");
-		UserService txUserService = (UserService)Proxy.newProxyInstance(
-				getClass().getClassLoader(), 
-				new Class[] {UserService.class}, 
-				txHandler);
+		TxProxyFactoryBean txProxyFactoryBean = context.getBean("&userService", TxProxyFactoryBean.class);
+		txProxyFactoryBean.setTarget(userServiceImpl);
+		UserService txUserService = (UserService) txProxyFactoryBean.getObject();
 		
 		//테스트를 위한 데이터 초기화
 		userDao.deleteAll();
