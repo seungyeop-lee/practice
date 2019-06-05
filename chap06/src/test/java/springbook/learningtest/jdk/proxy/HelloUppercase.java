@@ -1,4 +1,4 @@
-package springbook.learningtest.jdk;
+package springbook.learningtest.jdk.proxy;
 
 /**
  * Hello타입의 메소드의 반환값을 대문자로 변환해 주는 프록시 클래스 
