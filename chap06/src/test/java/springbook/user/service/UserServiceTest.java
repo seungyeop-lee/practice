@@ -1,5 +1,6 @@
 package springbook.user.service;
 
+import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
@@ -19,7 +20,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
-import org.springframework.aop.framework.ProxyFactoryBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
@@ -44,13 +44,16 @@ public class UserServiceTest {
 	UserService userService;
 	
 	@Autowired
+	UserService testUserService;	//트랜젝션 테스트 전용 UserService
+	
+	@Autowired
 	UserDao userDao;
 	
 	@Autowired
 	MailSender mailSender;
 	
 	@Autowired
-	CommonUserLevelUpgradePolicy upgradePolicy;
+	CommonUserLevelUpgradePolicy userLevelUpgradePolicy;
 	
 	@Autowired
 	DataSourceTransactionManager transactionManager;
@@ -84,13 +87,13 @@ public class UserServiceTest {
 		MockMailSender mockMailSender = new MockMailSender();
 		
 		//목 객체 수동 DI
-		upgradePolicy.setUserDao(mockUserDao);
-		upgradePolicy.setMailSender(mockMailSender);
+		userLevelUpgradePolicy.setUserDao(mockUserDao);
+		userLevelUpgradePolicy.setMailSender(mockMailSender);
 		
 		//UserServiceImpl객체 생성 및 수동 DI
 		UserServiceImpl userServiceImpl = new UserServiceImpl();
 		userServiceImpl.setUserDao(mockUserDao);
-		userServiceImpl.setUserLevelUpgradePolicy(upgradePolicy);
+		userServiceImpl.setUserLevelUpgradePolicy(userLevelUpgradePolicy);
 		
 		//레벨 상향
 		userServiceImpl.upgradeLevels();
@@ -178,21 +181,6 @@ public class UserServiceTest {
 	@Test
 	@DirtiesContext	//스프링으로 부터 DI받은 빈의 내부 상태를 수정했다는 것을 알림, 다른 테스트 전에 사용된 빈의 초기화 진행
 	public void upgradeAllOrNothing() throws Exception {
-		//테스트용 레벨 상향 정책 준비
-		TestUserLevelUpgradePolicy upgradePolicy = new TestUserLevelUpgradePolicy(users.get(3).getId());
-		upgradePolicy.setUserDao(userDao);
-		upgradePolicy.setMailSender(mailSender);
-		
-		//기본 UserService객체 생성
-		UserServiceImpl userServiceImpl = new UserServiceImpl();
-		userServiceImpl.setUserDao(userDao);
-		//테스트용 레벨 상향 정책을 UserService에 수동DI
-		userServiceImpl.setUserLevelUpgradePolicy(upgradePolicy);
-		
-		//트랜잭션 적용 UserService객체 생성
-		ProxyFactoryBean txProxyFactoryBean = context.getBean("&userService", ProxyFactoryBean.class);
-		txProxyFactoryBean.setTarget(userServiceImpl);
-		UserService txUserService = (UserService) txProxyFactoryBean.getObject();
 		
 		//테스트를 위한 데이터 초기화
 		userDao.deleteAll();
@@ -202,7 +190,7 @@ public class UserServiceTest {
 		
 		//레벨 상향 로직 수행, 중간에 예외 발생
 		try {
-			txUserService.upgradeLevels();
+			testUserService.upgradeLevels();
 			fail("TestUserLevelUpgradePolicyException expected");
 		} catch (TestUserLevelUpgradePolicyException e) {
 		}
@@ -211,14 +199,15 @@ public class UserServiceTest {
 		checkUserAndLevel(users.get(1), "b", Level.BASIC);
 	}
 	
+	@Test
+	public void advisorAutoProxyCreator() {
+		assertThat(testUserService, is(instanceOf(java.lang.reflect.Proxy.class)));
+	}
+	
 	//테스트용 레벨 상향 정책
 	static class TestUserLevelUpgradePolicy extends CommonUserLevelUpgradePolicy {
 		//예외가 발생하길 원하는 id
-		private String id;
-		
-		private TestUserLevelUpgradePolicy(String id) {
-			this.id = id;
-		}
+		private String id = "d";	//빈으로 등록하기 위해 예외 발생id를 하드코딩
 		
 		@Override
 		public void upgradeLevel(User user) {
