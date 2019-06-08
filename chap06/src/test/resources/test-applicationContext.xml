@@ -2,14 +2,23 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:tx="http://www.springframework.org/schema/tx"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
-		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.0.xsd">
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.0.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.0.xsd">
 	
 	<!-- AOP설정 전용태그, 필요에 따라 AspectJAdvisorAutoProxyCreator를 생성하여 빈으로 등록해준다. -->
 	<aop:config>
 		<!-- DefaultBeanFactoryPointcutAdvisor를 생성하여 빈으로 등록 -->
-		<aop:advisor advice-ref="transactionAdvice" pointcut="execution(* *..*ServiceImpl.upgrade*(..))"/>
+		<aop:advisor advice-ref="transactionAdvice" pointcut="bean(*Service*)" />
 	</aop:config>
+	
+	<tx:advice id="transactionAdvice">
+		<tx:attributes>
+			<tx:method name="get*" read-only="true" />
+			<tx:method name="*" />
+		</tx:attributes>
+	</tx:advice>
 	
 	<bean id="dataSource" class="org.springframework.jdbc.datasource.SimpleDriverDataSource">
 		<property name="driverClass" value="com.mysql.cj.jdbc.Driver" />
@@ -22,10 +31,6 @@
 	<bean id="userService" class="springbook.user.service.UserServiceImpl">
 		<property name="userDao" ref="userDao"></property>
 		<property name="userLevelUpgradePolicy" ref="userLevelUpgradePolicy"></property>
-	</bean>
-	
-	<bean id="transactionAdvice" class="springbook.user.service.TransactionAdvice">
-		<property name="transactionManager" ref="transactionManager"></property>
 	</bean>
 	
 	<bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
@@ -44,6 +49,10 @@
 	
 	<!-- 트랜젝션 테스트(upgradeAllOrNothing())용 UserLevelUpgradePolicy -->
 	<bean id="testUserLevelUpgradePolicy" class="springbook.user.service.UserServiceTest$TestUserLevelUpgradePolicy" parent="userLevelUpgradePolicy" />
+	
+	<!-- 읽기전용 속성 테스트(readOnlyTransactionAttribute)용 UserService -->
+	<bean id="testUserService2" class="springbook.user.service.UserServiceTest$TestUserService" parent="userService">
+	</bean>
 	
 	<bean id="mailSender" class="springbook.user.service.DummyMailSender">
 	</bean>

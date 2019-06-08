@@ -22,6 +22,7 @@ import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
+import org.springframework.dao.TransientDataAccessResourceException;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.mail.MailSender;
 import org.springframework.mail.SimpleMailMessage;
@@ -45,6 +46,9 @@ public class UserServiceTest {
 	
 	@Autowired
 	UserService testUserService;	//트랜젝션 테스트 전용 UserService
+	
+	@Autowired
+	UserService testUserService2;
 	
 	@Autowired
 	UserDao userDao;
@@ -204,6 +208,11 @@ public class UserServiceTest {
 		assertThat(testUserService, is(instanceOf(java.lang.reflect.Proxy.class)));
 	}
 	
+	@Test(expected = TransientDataAccessResourceException.class)
+	public void readOnlyTransactionAttribute() {
+		testUserService2.getAll();
+	}
+	
 	//테스트용 레벨 상향 정책
 	static class TestUserLevelUpgradePolicy extends CommonUserLevelUpgradePolicy {
 		//예외가 발생하길 원하는 id
@@ -221,5 +230,15 @@ public class UserServiceTest {
 	
 	@SuppressWarnings("serial")
 	static class TestUserLevelUpgradePolicyException extends RuntimeException {}
+	
+	static class TestUserService extends UserServiceImpl {
+		@Override
+		public List<User> getAll() {
+			for(User user : super.getAll()) {
+				super.update(user);
+			}
+			return null;
+		}
+	}
 
 }

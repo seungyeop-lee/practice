@@ -2,10 +2,6 @@ package springbook.user.service;
 
 import java.util.List;
 
-import org.springframework.transaction.PlatformTransactionManager;
-import org.springframework.transaction.TransactionStatus;
-import org.springframework.transaction.support.DefaultTransactionDefinition;
-
 import springbook.user.dao.UserDao;
 import springbook.user.domain.Level;
 import springbook.user.domain.User;
@@ -43,5 +39,22 @@ public class UserServiceImpl implements UserService {
 		if(user.getLevel() == null) user.setLevel(Level.BASIC);
 		
 		userDao.add(user);
+	}
+	
+	@Override
+	public User get(String id) {
+		return userDao.get(id);
+	}
+	@Override
+	public List<User> getAll() {
+		return userDao.getAll();
+	}
+	@Override
+	public void deleteAll() {
+		userDao.deleteAll();
+	}
+	@Override
+	public void update(User user) {
+		userDao.update(user);
 	}
 }
