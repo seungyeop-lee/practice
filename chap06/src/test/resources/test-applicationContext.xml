@@ -7,18 +7,7 @@
 		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.0.xsd
 		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.0.xsd">
 	
-	<!-- AOP설정 전용태그, 필요에 따라 AspectJAdvisorAutoProxyCreator를 생성하여 빈으로 등록해준다. -->
-	<aop:config>
-		<!-- DefaultBeanFactoryPointcutAdvisor를 생성하여 빈으로 등록 -->
-		<aop:advisor advice-ref="transactionAdvice" pointcut="bean(*Service*)" />
-	</aop:config>
-	
-	<tx:advice id="transactionAdvice">
-		<tx:attributes>
-			<tx:method name="get*" read-only="true" />
-			<tx:method name="*" />
-		</tx:attributes>
-	</tx:advice>
+	<tx:annotation-driven/>
 	
 	<bean id="dataSource" class="org.springframework.jdbc.datasource.SimpleDriverDataSource">
 		<property name="driverClass" value="com.mysql.cj.jdbc.Driver" />
