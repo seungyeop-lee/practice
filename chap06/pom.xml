@@ -76,7 +76,14 @@
 			<artifactId>mail</artifactId>
 			<version>1.4</version>
 		</dependency>
-
+		
+		<!-- https://mvnrepository.com/artifact/org.aspectj/aspectjtools -->
+		<dependency>
+		    <groupId>org.aspectj</groupId>
+		    <artifactId>aspectjtools</artifactId>
+		    <version>1.6.12</version>
+		</dependency>
+		
 		<!-- https://mvnrepository.com/artifact/junit/junit -->
 		<dependency>
 			<groupId>junit</groupId>
