@@ -30,6 +30,7 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
 import springbook.user.dao.UserDao;
@@ -38,6 +39,8 @@ import springbook.user.domain.User;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = "/test-applicationContext.xml")
+@Transactional
+@TransactionConfiguration(defaultRollback = false)	//기본적으로 예외가 발생하지 않으면 커밋하는 것으로
 public class UserServiceTest {
 	
 	@Autowired
@@ -185,6 +188,7 @@ public class UserServiceTest {
 	}
 	
 	@Test
+	@Rollback
 	@DirtiesContext	//스프링으로 부터 DI받은 빈의 내부 상태를 수정했다는 것을 알림, 다른 테스트 전에 사용된 빈의 초기화 진행
 	public void upgradeAllOrNothing() throws Exception {
 		
@@ -210,14 +214,15 @@ public class UserServiceTest {
 		assertThat(testUserService, is(instanceOf(java.lang.reflect.Proxy.class)));
 	}
 	
+	@Transactional(readOnly = true)
+	@Rollback
 	@Test(expected = TransientDataAccessResourceException.class)
 	public void readOnlyTransactionAttribute() {
 		testUserService2.getAll();
 	}
 	
 	@Test
-	@Transactional
-	@Rollback(false)	//예외가 발생하지 않으면, 메소드 종료 후 커밋이 된다.
+	@Rollback	//메소드 별로 롤백 여부를 다시 설정 가능
 	public void transactionSync() {
 		userService.deleteAll();
 		
