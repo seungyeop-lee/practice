@@ -29,6 +29,8 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.transaction.TransactionStatus;
+import org.springframework.transaction.support.DefaultTransactionDefinition;
 
 import springbook.user.dao.UserDao;
 import springbook.user.domain.Level;
@@ -211,6 +213,26 @@ public class UserServiceTest {
 	@Test(expected = TransientDataAccessResourceException.class)
 	public void readOnlyTransactionAttribute() {
 		testUserService2.getAll();
+	}
+	
+	@Test
+	public void transactionSync() {
+		//각 service의 트랜잭션이 시작되기 전에 트랜잭션을 미리 시작
+		DefaultTransactionDefinition txDefinition = new DefaultTransactionDefinition();
+		TransactionStatus txStatus = transactionManager.getTransaction(txDefinition);
+		
+		try {
+			//service의 메소드는 트랜잭션 정책에 따라 먼저 만들어진 트랜잭션에 참여
+			//같은 트랜잭션으로 편입되는 효과
+			userService.deleteAll();
+			
+			userService.add(users.get(0));
+			userService.add(users.get(1));
+		} finally {
+			//테스트 결과와 상관없이 DB의 변경 사항을 복구
+			transactionManager.rollback(txStatus);
+		}
+		
 	}
 	
 	//테스트용 레벨 상향 정책
