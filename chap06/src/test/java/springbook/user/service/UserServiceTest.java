@@ -29,8 +29,7 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.transaction.TransactionStatus;
-import org.springframework.transaction.support.DefaultTransactionDefinition;
+import org.springframework.transaction.annotation.Transactional;
 
 import springbook.user.dao.UserDao;
 import springbook.user.domain.Level;
@@ -216,23 +215,12 @@ public class UserServiceTest {
 	}
 	
 	@Test
+	@Transactional	//테스트에서 사용하면 해당 메소드가 끝난 후 자동으로 rollback
 	public void transactionSync() {
-		//각 service의 트랜잭션이 시작되기 전에 트랜잭션을 미리 시작
-		DefaultTransactionDefinition txDefinition = new DefaultTransactionDefinition();
-		TransactionStatus txStatus = transactionManager.getTransaction(txDefinition);
+		userService.deleteAll();
 		
-		try {
-			//service의 메소드는 트랜잭션 정책에 따라 먼저 만들어진 트랜잭션에 참여
-			//같은 트랜잭션으로 편입되는 효과
-			userService.deleteAll();
-			
-			userService.add(users.get(0));
-			userService.add(users.get(1));
-		} finally {
-			//테스트 결과와 상관없이 DB의 변경 사항을 복구
-			transactionManager.rollback(txStatus);
-		}
-		
+		userService.add(users.get(0));
+		userService.add(users.get(1));
 	}
 	
 	//테스트용 레벨 상향 정책
