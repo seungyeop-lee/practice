@@ -7,10 +7,8 @@
 	
 	<!-- AOP설정 전용태그, 필요에 따라 AspectJAdvisorAutoProxyCreator를 생성하여 빈으로 등록해준다. -->
 	<aop:config>
-		<!-- expression을 표현식으로 하는 AspectJExpressionPointcut을 빈으로 등록 -->
-		<aop:pointcut id="transactionPointcut" expression="execution(* *..*ServiceImpl.upgrade*(..))"/>
 		<!-- DefaultBeanFactoryPointcutAdvisor를 생성하여 빈으로 등록 -->
-		<aop:advisor advice-ref="transactionAdvice" pointcut-ref="transactionPointcut"/>
+		<aop:advisor advice-ref="transactionAdvice" pointcut="execution(* *..*ServiceImpl.upgrade*(..))"/>
 	</aop:config>
 	
 	<bean id="dataSource" class="org.springframework.jdbc.datasource.SimpleDriverDataSource">
