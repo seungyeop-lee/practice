@@ -27,6 +27,7 @@ import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.mail.MailSender;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
@@ -215,7 +216,8 @@ public class UserServiceTest {
 	}
 	
 	@Test
-	@Transactional	//테스트에서 사용하면 해당 메소드가 끝난 후 자동으로 rollback
+	@Transactional
+	@Rollback(false)	//예외가 발생하지 않으면, 메소드 종료 후 커밋이 된다.
 	public void transactionSync() {
 		userService.deleteAll();
 		
