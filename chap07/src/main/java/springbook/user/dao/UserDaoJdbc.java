@@ -3,6 +3,7 @@ package springbook.user.dao;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Map;
 
 import javax.sql.DataSource;
 
@@ -14,11 +15,11 @@ import springbook.user.domain.User;
 
 public class UserDaoJdbc implements UserDao {
 	
-	private String sqlAdd;
+	private Map<String, String> sqlMap;
 	
-	//SQL문을 주입받음
-	public void setSqlAdd(String sqlAdd) {
-		this.sqlAdd = sqlAdd;
+	//SQL정보를 주입받음
+	public void setSqlMap(Map<String, String> sqlMap) {
+		this.sqlMap = sqlMap;
 	}
 	
 	//재사용 가능하도록 RowMapper객체를 분리
@@ -47,7 +48,7 @@ public class UserDaoJdbc implements UserDao {
 	@Override
 	public void add(User user) {
 		//JdbcTemplate의 내부 콜백사용 메소드로 변경
-		this.jdbcTemplate.update(this.sqlAdd,
+		this.jdbcTemplate.update(this.sqlMap.get("add"),
 				user.getId(), user.getName(), user.getPassword(), 
 				user.getLevel().intValue(), user.getLogin(), user.getRecommend(), user.getEmail());
 	}
@@ -56,7 +57,7 @@ public class UserDaoJdbc implements UserDao {
 	public User get(String id) {
 		
 		return this.jdbcTemplate.queryForObject(
-				"select * from users where id = ?",	//SQL구문
+				this.sqlMap.get("get"),	//SQL구문
 				new Object[] {id},	// ? 에 넣어 줄 인자 값
 				this.userMapper
 		);
@@ -66,25 +67,24 @@ public class UserDaoJdbc implements UserDao {
 	@Override
 	public void deleteAll() {
 		//JdbcTemplate의 내부 콜백사용 메소드로 변경
-		this.jdbcTemplate.update("delete from users");
+		this.jdbcTemplate.update(this.sqlMap.get("deleteAll"));
 	}
 	
 	@Override
 	public int getCount() {
 		//내장 콜백을 이용하는 sql실행 메소드
-		return this.jdbcTemplate.queryForInt("select count(*) from users");
+		return this.jdbcTemplate.queryForInt(this.sqlMap.get("getCount"));
 	}
 	
 	@Override
 	public List<User> getAll() {
-		return this.jdbcTemplate.query("select * from users order by id",
+		return this.jdbcTemplate.query(this.sqlMap.get("getAll"),
 				this.userMapper);
 	}
 	
 	@Override
 	public void update(User user) {
-		this.jdbcTemplate.update("update users set name = ?, password = ?, level = ?, "
-				+ "login = ?, recommend = ?, email = ? where id = ?",
+		this.jdbcTemplate.update(this.sqlMap.get("update"),
 				user.getName(), user.getPassword(), user.getLevel().intValue(), 
 				user.getLogin(), user.getRecommend(), user.getEmail(), user.getId());
 	}
