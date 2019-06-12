@@ -14,6 +14,13 @@ import springbook.user.domain.User;
 
 public class UserDaoJdbc implements UserDao {
 	
+	private String sqlAdd;
+	
+	//SQL문을 주입받음
+	public void setSqlAdd(String sqlAdd) {
+		this.sqlAdd = sqlAdd;
+	}
+	
 	//재사용 가능하도록 RowMapper객체를 분리
 	private RowMapper<User> userMapper = new RowMapper<User>() {
 		@Override
@@ -40,8 +47,7 @@ public class UserDaoJdbc implements UserDao {
 	@Override
 	public void add(User user) {
 		//JdbcTemplate의 내부 콜백사용 메소드로 변경
-		this.jdbcTemplate.update("insert into users(id, name, password, level, login, recommend, email) "
-				+ "values(?, ?, ?, ?, ?, ?, ?)",
+		this.jdbcTemplate.update(this.sqlAdd,
 				user.getId(), user.getName(), user.getPassword(), 
 				user.getLevel().intValue(), user.getLogin(), user.getRecommend(), user.getEmail());
 	}
