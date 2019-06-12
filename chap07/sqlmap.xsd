@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema" 
+ targetNamespace="http://www.epril.com/sqlmap" 
+ xmlns:tns="http://www.epril.com/sqlmap" elementFormDefault="qualified">
+	<element name="sqlMap">
+		<complexType>
+			<sequence>
+				<element name="sql" maxOccurs="unbounded" type="tns:sqlType" />
+			</sequence>
+		</complexType>
+	</element>
+	<complexType name="sqlType">
+		<simpleContent>
+			<extension base="string">
+				<attribute name="key" use="required" type="string" />
+			</extension>
+		</simpleContent>
+	</complexType>
+</schema>
+<!-- cmd에서 아래 명령을 실행 -->
+<!-- xjc -p springbook.user.sqlservice.jaxb sqlmap.xsd -d src/main/java -->
