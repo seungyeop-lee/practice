@@ -3,11 +3,16 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xmlns:aop="http://www.springframework.org/schema/aop"
 	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:context="http://www.springframework.org/schema/context"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd
 		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.0.xsd
 		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.0.xsd">
 	
 	<tx:annotation-driven/>
+	
+	<!-- 코드의 어노테이션을 이용해 부가적인 빈 설정이 가능하도록하는 후처리기를 등록 -->
+	<context:annotation-config/>
 	
 	<bean id="dataSource" class="org.springframework.jdbc.datasource.SimpleDriverDataSource">
 		<property name="driverClass" value="com.mysql.cj.jdbc.Driver" />
@@ -52,6 +57,7 @@
 	</bean>
 	
 	<bean id="sqlService" class="springbook.user.sqlservice.XmlSqlService">
+		<property name="sqlmapFile" value="sqlmap.xml" />
 	</bean>
 	
 </beans>
