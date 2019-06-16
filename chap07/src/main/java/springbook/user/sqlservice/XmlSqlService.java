@@ -13,17 +13,25 @@ import springbook.user.dao.UserDao;
 import springbook.user.sqlservice.jaxb.SqlMap;
 import springbook.user.sqlservice.jaxb.SqlType;
 
-public class XmlSqlService implements SqlService {
+public class XmlSqlService implements SqlService, SqlRegistry, SqlReader {
 
 	private Map<String, String> sqlMap = new HashMap<>(); 
 	private String sqlmapFile;
+	private SqlReader sqlReader;
+	private SqlRegistry sqlRegistry;
 	
 	public void setSqlmapFile(String sqlmapFile) {
 		this.sqlmapFile = sqlmapFile;
 	}
+	public void setSqlReader(SqlReader sqlReader) {
+		this.sqlReader = sqlReader;
+	}
+	public void setSqlRegistry(SqlRegistry sqlRegistry) {
+		this.sqlRegistry = sqlRegistry;
+	}
 	
-	@PostConstruct
-	public void loadSql() {
+	@Override
+	public void read(SqlRegistry sqlRegistry) {
 		String contextPath = SqlMap.class.getPackage().getName();
 		try {
 			JAXBContext context = JAXBContext.newInstance(contextPath);
@@ -32,25 +40,40 @@ public class XmlSqlService implements SqlService {
 			SqlMap unmarshaledSqlMap = (SqlMap)unmarshaller.unmarshal(is);
 			
 			for(SqlType sql : unmarshaledSqlMap.getSql()) {
-				sqlMap.put(sql.getKey(), sql.getValue());
+				sqlRegistry.registerSql(sql.getKey(), sql.getValue());
 			}
 		} catch (JAXBException e) {
 			throw new RuntimeException(e);
 		}
-		
 	}
 	
 	@Override
-	public String getSql(String key) throws SqlRetrievalFailureException {
-		
+	public String findSql(String key) throws SqlNotFoundException {
 		String sql = sqlMap.get(key);
-		
 		if(sql == null) {
-			throw new SqlRetrievalFailureException(key + "에 대한 SQL을 찾을 수 없습니다.");
+			throw new SqlNotFoundException(key + "에 대한 SQL을 찾을 수 없습니다.");
 		} else {
 			return sql;
 		}
-		
+	}
+	
+	@Override
+	public void registerSql(String key, String sql) {
+		sqlMap.put(key, sql);
+	}
+	
+	@PostConstruct
+	public void loadSql() {
+		this.sqlReader.read(this.sqlRegistry);
+	}
+
+	@Override
+	public String getSql(String key) throws SqlRetrievalFailureException {
+		try {
+			return this.sqlRegistry.findSql(key);
+		} catch (SqlNotFoundException e) {
+			throw new SqlRetrievalFailureException(e);
+		}
 	}
 
 }
