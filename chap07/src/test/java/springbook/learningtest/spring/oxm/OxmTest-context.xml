@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+	
+	<!-- 이름은 Marshaller이지만 Unmarshaller로서의 기능도 수행하는 클래스이다. -->
+	<bean id="unmarshaller" class="org.springframework.oxm.jaxb.Jaxb2Marshaller">
+		<!-- contextPath로는 jaxb매핑 클래스가 있는 패키지를 지정 -->
+		<property name="contextPath" value="springbook.user.sqlservice.jaxb" />
+	</bean>
+
+</beans>
