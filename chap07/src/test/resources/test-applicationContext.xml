@@ -67,10 +67,6 @@
 		<property name="contextPath" value="springbook.user.sqlservice.jaxb" />
 	</bean>
 	
-	<bean id="sqlRegistry" class="springbook.user.sqlservice.registry.MyUpdatableSqlRegistry" />
-	
-	<bean id="sqlAdminService" class="springbook.user.sqlservice.SqlAdminService" parent="sqlService">
-		<property name="updatableSqlRegistry" ref="sqlRegistry" />
-	</bean>
+	<bean id="sqlRegistry" class="springbook.user.sqlservice.registry.ConcurrentHashMapSqlRegistry" />
 	
 </beans>
