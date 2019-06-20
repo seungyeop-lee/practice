@@ -1,6 +1,8 @@
-package springbook.user.sqlservice;
+package springbook.user.sqlservice.registry;
 
 import java.util.Map;
+
+import springbook.user.sqlservice.exception.SqlUpdateFailureException;
 
 public class MyUpdatableSqlRegistry extends HashMapSqlRegistry implements UpdatableSqlRegistry {
 	

@@ -2,6 +2,8 @@ package springbook.user.sqlservice;
 
 import static springbook.user.sqlservice.UpdateEvent.*;
 
+import springbook.user.sqlservice.registry.UpdatableSqlRegistry;
+
 public class SqlAdminService extends OxmSqlService implements AdminEventListener {
 
 	private UpdatableSqlRegistry updatableSqlRegistry;

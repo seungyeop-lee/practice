@@ -1,4 +1,4 @@
-package springbook.user.sqlservice;
+package springbook.user.sqlservice.exception;
 
 /**
  * 요청한 key에 해당하는 SQL을 찾을 수 없을 경우 발생시킬 예외 
