@@ -58,6 +58,8 @@
 	
 	<bean id="sqlService" class="springbook.user.sqlservice.OxmSqlService">
 		<property name="unmarshaller" ref="unmarshaller" />
+		<!-- 리소스로더가 값을 읽고, 값에 맞는 Resource객체를 생성해준다. -->
+		<property name="sqlmap" value="classpath:springbook/user/dao/sqlmap.xml" />
 	</bean>
 	
 	<bean id="unmarshaller" class="org.springframework.oxm.jaxb.Jaxb2Marshaller">

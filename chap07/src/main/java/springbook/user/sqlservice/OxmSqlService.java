@@ -6,6 +6,8 @@ import javax.annotation.PostConstruct;
 import javax.xml.transform.Source;
 import javax.xml.transform.stream.StreamSource;
 
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 import org.springframework.oxm.Unmarshaller;
 
 import springbook.user.dao.UserDao;
@@ -23,9 +25,9 @@ public class OxmSqlService implements SqlService {
 		this.sqlRegistry = sqlRegistry;
 	}
 	
-	//OxmSqlReader에서 필요한 splmapFile과 unmarshaller를 주입받아 setter를 통해 넘겨준다.
-	public void setSqlmapFile(String sqlmapFile) {
-		oxmSqlReader.setSqlmapFile(sqlmapFile);
+	//OxmSqlReader에서 필요한 splmap과 unmarshaller를 주입받아 setter를 통해 넘겨준다.
+	public void setSqlmap(Resource sqlmap) {
+		oxmSqlReader.setSqlmap(sqlmap);
 	}
 	public void setUnmarshaller(Unmarshaller unmarshaller) {
 		oxmSqlReader.setUnmarshaller(unmarshaller);
@@ -48,13 +50,11 @@ public class OxmSqlService implements SqlService {
 	//응집도를 높이기위해 OxmSqlService클래스의 맴버 클래스로 정의, private이므로 외부에서 직접 접근이 불가
 	//빈의 갯수가 줄어들어 관리가 용이해지지만 유연성이 저하된다.
 	private class OxmSqlReader implements SqlReader {
-		private static final String DEFAULT_SQLMAP_FILE = "sqlmap.xml";
-		
-		private String sqlmapFile = DEFAULT_SQLMAP_FILE;
+		private Resource sqlmap = new ClassPathResource("sqlmap.xml", UserDao.class);
 		private Unmarshaller unmarshaller;
 		
-		public void setSqlmapFile(String sqlmapFile) {
-			this.sqlmapFile = sqlmapFile;
+		public void setSqlmap(Resource sqlmap) {
+			this.sqlmap = sqlmap;
 		}
 		public void setUnmarshaller(Unmarshaller unmarshaller) {
 			this.unmarshaller = unmarshaller;
@@ -63,13 +63,13 @@ public class OxmSqlService implements SqlService {
 		@Override
 		public void read(SqlRegistry sqlRegistry) {
 			try {
-				Source source = new StreamSource(UserDao.class.getResourceAsStream(this.sqlmapFile));
+				Source source = new StreamSource(sqlmap.getInputStream());
 				SqlMap sqlMap = (SqlMap)this.unmarshaller.unmarshal(source);
 				for(SqlType sql : sqlMap.getSql()) {
 					sqlRegistry.registerSql(sql.getKey(), sql.getValue());
 				}
 			} catch (IOException e) {
-				throw new IllegalArgumentException(this.sqlmapFile + "을 가져올 수 없습니다.", e);
+				throw new IllegalArgumentException(this.sqlmap.getFilename() + "을 가져올 수 없습니다.", e);
 			}
 		}
 	}
