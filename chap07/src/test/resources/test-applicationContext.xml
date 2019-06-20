@@ -60,10 +60,17 @@
 		<property name="unmarshaller" ref="unmarshaller" />
 		<!-- 리소스로더가 값을 읽고, 값에 맞는 Resource객체를 생성해준다. -->
 		<property name="sqlmap" value="classpath:springbook/user/dao/sqlmap.xml" />
+		<property name="sqlRegistry" ref="sqlRegistry" />
 	</bean>
 	
 	<bean id="unmarshaller" class="org.springframework.oxm.jaxb.Jaxb2Marshaller">
 		<property name="contextPath" value="springbook.user.sqlservice.jaxb" />
+	</bean>
+	
+	<bean id="sqlRegistry" class="springbook.user.sqlservice.MyUpdatableSqlRegistry" />
+	
+	<bean id="sqlAdminService" class="springbook.user.sqlservice.SqlAdminService" parent="sqlService">
+		<property name="updatableSqlRegistry" ref="sqlRegistry" />
 	</bean>
 	
 </beans>

@@ -5,7 +5,7 @@ import java.util.Map;
 
 public class HashMapSqlRegistry implements SqlRegistry {
 
-	private Map<String, String> sqlMap = new HashMap<>();
+	protected Map<String, String> sqlMap = new HashMap<>();
 	
 	@Override
 	public void registerSql(String key, String sql) {
