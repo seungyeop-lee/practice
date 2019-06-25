@@ -1,0 +1,19 @@
+# profile이 설정되지 않았을때(기본값)
+server:
+  port: 80
+---
+# 각 profile의 설정은 jar 실행 시 -D spring.profiles.active=[profile이름] 을 넣어주면 적용된다.
+spring:
+  profiles: local
+server:
+  port: 8080
+---
+spring:
+  profiles: dev
+server:
+  port: 8081
+---
+spring:
+  profiles: real
+server:
+  port: 8082
