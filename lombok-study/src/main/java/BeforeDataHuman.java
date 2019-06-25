@@ -7,7 +7,7 @@ import lombok.*;
 @RequiredArgsConstructor
 @AllArgsConstructor
 @NoArgsConstructor
-public class BeforeHuman4 {
+public class BeforeDataHuman {
     @NonNull private String name;
     private int age = 0;
 }

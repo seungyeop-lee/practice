@@ -5,7 +5,7 @@ import java.util.Objects;
 
 @Getter
 @Setter
-public class BeforeHuman2 {
+public class BeforeEqualsAndHashCodeHuman {
     private String name;
     private int age = 0;
 
@@ -13,7 +13,7 @@ public class BeforeHuman2 {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        BeforeHuman2 human = (BeforeHuman2) o;
+        BeforeEqualsAndHashCodeHuman human = (BeforeEqualsAndHashCodeHuman) o;
         return age == human.age &&
                 Objects.equals(name, human.name);
     }

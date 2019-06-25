@@ -6,19 +6,19 @@ import lombok.Setter;
 @Getter
 @Setter
 @EqualsAndHashCode(of = {"name"})
-public class BeforeHuman3 {
+public class BeforeConstructorHuman {
     @NonNull private String name;
     private int age = 0;
 
-    public BeforeHuman3(String name, int age) {
+    public BeforeConstructorHuman(String name, int age) {
         this.name = name;
         this.age = age;
     }
 
-    public BeforeHuman3() {
+    public BeforeConstructorHuman() {
     }
 
-    public BeforeHuman3(String name) {
+    public BeforeConstructorHuman(String name) {
         this.name = name;
     }
 

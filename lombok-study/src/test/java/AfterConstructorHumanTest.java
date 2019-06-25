@@ -3,7 +3,7 @@ import org.junit.Test;
 import static org.hamcrest.core.IsNull.notNullValue;
 import static org.junit.Assert.assertThat;
 
-public class AfterHuman3Test {
+public class AfterConstructorHumanTest {
 
     @Test
     public void constructorTest() {
@@ -11,15 +11,15 @@ public class AfterHuman3Test {
         String name = "Seungyeop Lee";
 
         //@AllArgsConstructor 확인
-        AfterHuman3 h1 = new AfterHuman3(name, age);
+        AfterConstructorHuman h1 = new AfterConstructorHuman(name, age);
         assertThat(h1, notNullValue());
 
         //@NoArgsConstructor 확인
-        AfterHuman3 h2 = new AfterHuman3();
+        AfterConstructorHuman h2 = new AfterConstructorHuman();
         assertThat(h2, notNullValue());
 
         //@RequiredArgsConstructor 확인
-        AfterHuman3 h3 = new AfterHuman3(name);
+        AfterConstructorHuman h3 = new AfterConstructorHuman(name);
         assertThat(h3, notNullValue());
     }
 }

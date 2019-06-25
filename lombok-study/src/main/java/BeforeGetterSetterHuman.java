@@ -1,4 +1,4 @@
-public class BeforeHuman1 {
+public class BeforeGetterSetterHuman {
     private String name;
     private int age = 0;
 

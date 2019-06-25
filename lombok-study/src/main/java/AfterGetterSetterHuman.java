@@ -3,7 +3,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class AfterHuman1 {
+public class AfterGetterSetterHuman {
     private String name;
     private int age = 0;
 }

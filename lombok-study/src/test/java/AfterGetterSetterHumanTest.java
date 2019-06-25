@@ -3,14 +3,14 @@ import org.junit.Test;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
-public class AfterHuman1Test {
+public class AfterGetterSetterHumanTest {
 
     @Test
     public void getterAndSetterTest() {
         int age = 33;
         String name = "Seungyeop Lee";
 
-        AfterHuman1 human = new AfterHuman1();
+        AfterGetterSetterHuman human = new AfterGetterSetterHuman();
         human.setAge(age);
         human.setName(name);
 

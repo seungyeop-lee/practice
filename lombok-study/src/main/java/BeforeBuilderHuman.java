@@ -6,7 +6,7 @@ import lombok.NonNull;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class BeforeHuman5 {
+public class BeforeBuilderHuman {
     @NonNull private String name;
     private int age = 0;
 
@@ -31,8 +31,8 @@ public class BeforeHuman5 {
             return this;
         }
 
-        public BeforeHuman5 build() {
-            return new BeforeHuman5(name, age);
+        public BeforeBuilderHuman build() {
+            return new BeforeBuilderHuman(name, age);
         }
 
         @Override

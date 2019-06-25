@@ -3,13 +3,13 @@ import org.junit.Test;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
-public class AfterHuman5Test {
+public class AfterBuilderHumanTest {
     @Test
     public void testBuilder() {
-        AfterHuman5 human = AfterHuman5.builder()
+        AfterBuilderHuman human = AfterBuilderHuman.builder()
                 .name("Seungyeop Lee")
                 .age(33)
                 .build();
-        assertThat(human.toString(), is("AfterHuman5(name=Seungyeop Lee, age=33)"));
+        assertThat(human.toString(), is("AfterBuilderHuman(name=Seungyeop Lee, age=33)"));
     }
 }
