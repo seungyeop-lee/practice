@@ -4,5 +4,9 @@
     <annotationProcessing>
       <profile default="true" name="Default" enabled="true" />
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="spring-boot-property.main" target="11" />
+      <module name="spring-boot-property.test" target="11" />
+    </bytecodeTargetLevel>
   </component>
 </project>
