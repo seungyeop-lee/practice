@@ -32,3 +32,13 @@ fruit:
       color: red
     - name: water melon
       color: green
+---
+fruits:
+  kebab:
+    color-name: black
+  snake:
+    color_name: blue
+  camel:
+    colorName: orange
+  normal:
+    colorname: pink
