@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/lombok-study/lombok-study.iml" filepath="$PROJECT_DIR$/lombok-study/lombok-study.iml" />
+      <module fileurl="file://$PROJECT_DIR$/spring-boot-property/spring-boot-property.iml" filepath="$PROJECT_DIR$/spring-boot-property/spring-boot-property.iml" />
+      <module fileurl="file://$PROJECT_DIR$/spring-boot-test/spring-boot-test.iml" filepath="$PROJECT_DIR$/spring-boot-test/spring-boot-test.iml" />
+    </modules>
+  </component>
+</project>
