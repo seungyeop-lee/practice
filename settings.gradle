@@ -1,2 +1,0 @@
-rootProject.name = 'Spring-Boot-Study'
-include 'lombok-study', 'spring-boot-property', 'spring-boot-test'
