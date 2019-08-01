@@ -8,21 +8,33 @@
         <script src="script.js"></script>
     </head>
     <body ng-app="todo" ng-controller="TodoCtrl">
-        <ul class="list-unstyled">
-            <li ng-repeat="todo in todos">
-                <div class="input-group">
-                    <span class="input-group-addon">
-                        <input type="checkbox" ng-model="todo.completed">
-                    </span>
-                    <input type="text" class="form-control" ng-model="todo.title">
-                    <span class="input-group-btn">
-                        <!-- ng-click에 메소드명을 설정하면, 컨트롤러에 존재하는 해당 메소드가 실행 됨 -->
-                        <!-- 인수로 설정 할 값을 문자열 형식으로 설정해도 앵귤러가 해석하여 적용 -->
-                        <button class="btn btn-danger" type="button" ng-click="remove(todo)">삭제</button>
-                    </span>
-                </div>
-                <date>{{todo.createdAt | date:'yyyy-MM-dd HH:mm:ss'}}</date>
-            </li>
-        </ul>
+
+        <div class="container">
+
+            <h1>Todo 목록</h1>
+            
+            <ul class="list-unstyled">
+                <!-- ng-repeat에 filter를 걸 수 있다. -->
+                <!-- 필터는 filter:객체 형식으로 적용 가능하며, 변수(statusFilter)를 이용하는 것도 가능하다.-->
+                <li ng-repeat="todo in todos | filter:statusFilter">
+                    <div class="input-group">
+                        <span class="input-group-addon">
+                            <input type="checkbox" ng-model="todo.completed">
+                        </span>
+                        <input type="text" class="form-control" ng-model="todo.title">
+                        <span class="input-group-btn">
+                            <button class="btn btn-danger" type="button" ng-click="remove(todo)">삭제</button>
+                        </span>
+                    </div>
+                    <date>{{todo.createdAt | date:'yyyy-MM-dd HH:mm:ss'}}</date>
+                </li>
+            </ul>
+
+            <!-- 클릭 되었을 때, 해당하는 필터가 적용되도록 변수에 필터 조건 정의 -->
+            <button class="btn btn-primary" ng-click="statusFilter={completed: true}">Completed</button>
+            <button class="btn btn-primary" ng-click="statusFilter={completed: false}">Active</button>
+            <button class="btn btn-primary" ng-click="statusFilter={}">All</button>
+
+        </div>
     </body>
 </html>
