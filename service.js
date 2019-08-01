@@ -1,24 +1,18 @@
 angular.module('todo').factory('todoStorage', function() {
+    var TODO_DATA = 'TODO_DATA';
     var storage = {
-        todos: [
-            {
-                title: '요가수행',
-                completed: false,
-                createdAt: Date.now()
-            },
-            {
-                title: '앵귤러 학습',
-                completed: false,
-                createdAt: Date.now()
-            },
-            {
-                title: '운동하기',
-                completed: true,
-                createdAt: Date.now()
-            }
-        ],
+        todos: [],
+
+        _saveToLocalStorage: function(data) {
+            localStorage.setItem(TODO_DATA, JSON.stringify(data));
+        },
+
+        _getFromLocalStorage: function() {
+            return JSON.parse(localStorage.getItem(TODO_DATA)) || [];
+        },
 
         get: function() {
+            angular.copy(this._getFromLocalStorage(), this.todos);
             return this.todos;
         },
 
@@ -31,6 +25,7 @@ angular.module('todo').factory('todoStorage', function() {
             // 해당하는 todo가 있을 경우 삭제
             if(idx > -1) {
                 this.todos.splice(idx, 1);
+                this._saveToLocalStorage(this.todos);
             }
         },
         
@@ -44,6 +39,8 @@ angular.module('todo').factory('todoStorage', function() {
 
             // todos에 추가
             this.todos.push(newTodo);
+
+            this._saveToLocalStorage(this.todos);
         }
     }
 
