@@ -41,6 +41,10 @@ angular.module('todo').factory('todoStorage', function() {
             this.todos.push(newTodo);
 
             this._saveToLocalStorage(this.todos);
+        },
+
+        update: function() {
+            this._saveToLocalStorage(this.todos);
         }
     }
 

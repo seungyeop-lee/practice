@@ -13,9 +13,9 @@ angular.module('todo').directive('todoItem', function() {
         template: 
             `<div class="input-group">
                 <span class="input-group-addon">
-                    <input type="checkbox" ng-model="todo.completed">
+                    <input type="checkbox" ng-model="todo.completed" ng-change="update()">
                 </span>
-                <input type="text" class="form-control" ng-model="todo.title">
+                <input type="text" class="form-control" ng-model="todo.title" ng-blur="update()">
                 <span class="input-group-btn">
                     <button class="btn btn-danger" type="button" ng-click="remove(todo)">삭제</button>
                 </span>

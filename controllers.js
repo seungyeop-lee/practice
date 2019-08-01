@@ -12,4 +12,8 @@ angular.module('todo').controller('TodoCtrl', function($scope, todoStorage) {
         // input태그 비워 줌
         $scope.newTodoTitle = "";
     };
+
+    $scope.update = function() {
+        todoStorage.update();
+    }
 });
