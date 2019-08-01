@@ -1,11 +1,9 @@
-//directive로 설정 할 경우, html에서 태그로 사용 가능
 angular.module('todo').directive('todoTitle', function() {
     return {
         template: '<h1>Todo 목록</h1>'
     };
 });
 
-//directive로 설정 할 경우, html에서 태그로 사용 가능
 angular.module('todo').directive('todoItem', function() {
     return {
         // template에 넣을 html문이 길 경우, 따로 파일을 만들어서 연결하는 것도 가능
@@ -23,5 +21,14 @@ angular.module('todo').directive('todoItem', function() {
                 </span>
             </div>
             <date>{{todo.createdAt | date:'yyyy-MM-dd HH:mm:ss'}}</date>`
+    }
+});
+
+angular.module('todo').directive('todoFilters', function() {
+    return {
+        template: 
+            `<button class="btn btn-primary" ng-click="statusFilter={completed: true}">Completed</button>
+            <button class="btn btn-primary" ng-click="statusFilter={completed: false}">Active</button>
+            <button class="btn btn-primary" ng-click="statusFilter={}">All</button>`
     }
 });
