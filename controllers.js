@@ -1,6 +1,4 @@
-var app = angular.module('todo', []);
-
-app.controller('TodoCtrl', function($scope) {
+angular.module('todo').controller('TodoCtrl', function($scope) {
     $scope.todos = [
         {
             title: '요가수행',

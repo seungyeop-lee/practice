@@ -21,7 +21,7 @@ angular.module('todo').directive('todoItem', function() {
                 </span>
             </div>
             <date>{{todo.createdAt | date:'yyyy-MM-dd HH:mm:ss'}}</date>`
-    }
+    };
 });
 
 angular.module('todo').directive('todoFilters', function() {
@@ -30,5 +30,22 @@ angular.module('todo').directive('todoFilters', function() {
             `<button class="btn btn-primary" ng-click="statusFilter={completed: true}">Completed</button>
             <button class="btn btn-primary" ng-click="statusFilter={completed: false}">Active</button>
             <button class="btn btn-primary" ng-click="statusFilter={}">All</button>`
-    }
+    };
+});
+
+angular.module('todo').directive('todoForm', function() {
+    return {
+        template: 
+            `<form name="todoForm" ng-submit="add(newTodoTitle)">
+                <div class="input-group">
+                    <input type="text" class="form-control" ng-model="newTodoTitle" placeholder="새로운 Todo를 입력하세요..." minlength="3">
+                    <span class="input-group-btn">
+                        <button class="btn btn-success" type="submit">추가</button>
+                    </span>
+                </div>
+                <div ng-show="todoForm.$dirty && todoForm.$invalid">
+                    <div class="alert alert-warning" role="alert">3글자 이상 입력하세요.</div>
+                </div>
+            </form>`
+    };
 });
