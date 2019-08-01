@@ -6,7 +6,10 @@
         <link rel="stylesheet" href="style.css">
         <script src="script.js"></script>
     </head>
-    <body>
-        <h1>Hello World!</h1>
+    <!-- ng-app은 해당 영역이 Angular라이브러리를 사용 함을 명시-->
+    <!-- ng-init은 해당 명령어로 Anagular사용 영역을 초기화-->
+    <body ng-app ng-init="name = 'Chris'">
+        <!-- 표현식( {{ }} )을 사용하면 Angular에서 정의 한 변수의 값을 대입하는 것이 가능-->
+        <h1>Hello {{ name }}!</h1>
     </body>
 </html>
