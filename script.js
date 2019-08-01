@@ -2,7 +2,6 @@
     var app = angular.module('todo', []);
 
     app.controller('TodoCtrl', ['$scope', function($scope) {
-        //todo가 2개 이상인 경우
         $scope.todos = [
             {
                 title: '요가수행',
