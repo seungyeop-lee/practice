@@ -1,21 +1,6 @@
-angular.module('todo').controller('TodoCtrl', function($scope) {
-    $scope.todos = [
-        {
-            title: '요가수행',
-            completed: false,
-            createdAt: Date.now()
-        },
-        {
-            title: '앵귤러 학습',
-            completed: false,
-            createdAt: Date.now()
-        },
-        {
-            title: '운동하기',
-            completed: true,
-            createdAt: Date.now()
-        }
-    ];
+angular.module('todo').controller('TodoCtrl', function($scope, todoStorage) {
+
+    $scope.todos = todoStorage.get();
 
     $scope.remove = function(todo) {
         // todos에 있는 todo(item)과 클릭된 부분의 todo(todo) 중 같은 부분의 index저장
