@@ -1,7 +1,7 @@
 (function() {
     var app = angular.module('todo', []);
 
-    app.controller('TodoCtrl', ['$scope', function($scope) {
+    app.controller('TodoCtrl', function($scope) {
         $scope.todos = [
             {
                 title: '요가수행',
@@ -19,5 +19,17 @@
                 createdAt: Date.now()
             }
         ];
-    }]);
+
+        $scope.remove = function(todo) {
+            // todos에 있는 todo(item)과 클릭된 부분의 todo(todo) 중 같은 부분의 index저장
+            var idx = $scope.todos.findIndex(function(item) {
+                return item == todo;
+            });
+
+            // 해당하는 todo가 있을 경우 삭제
+            if(idx > -1) {
+                $scope.todos.splice(idx, 1);
+            }
+        };
+    });
 })();

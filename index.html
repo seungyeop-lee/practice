@@ -15,12 +15,12 @@
                         <input type="checkbox" ng-model="todo.completed">
                     </span>
                     <input type="text" class="form-control" ng-model="todo.title">
+                    <span class="input-group-btn">
+                        <!-- ng-click에 메소드명을 설정하면, 컨트롤러에 존재하는 해당 메소드가 실행 됨 -->
+                        <!-- 인수로 설정 할 값을 문자열 형식으로 설정해도 앵귤러가 해석하여 적용 -->
+                        <button class="btn btn-danger" type="button" ng-click="remove(todo)">삭제</button>
+                    </span>
                 </div>
-                <!-- 표현식에 | 를 사용하면 필터기능 사용 가능 (ngFilter) -->
-                <!-- date를 넣을 경우 날짜필터 사용이 가능 -->
-                <date>{{todo.createdAt | date}}</date>
-                <br>
-                <!-- 형식을 임의로 지정하는 것도 가능 -->
                 <date>{{todo.createdAt | date:'yyyy-MM-dd HH:mm:ss'}}</date>
             </li>
         </ul>
