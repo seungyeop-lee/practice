@@ -31,5 +31,9 @@
                 $scope.todos.splice(idx, 1);
             }
         };
+
+        $scope.add = function(newTodoTitle) {
+            alert(newTodoTitle);
+        }
     });
 })();

@@ -12,10 +12,19 @@
         <div class="container">
 
             <h1>Todo 목록</h1>
+
+            <!-- submit이벤트 발생 시, ng-submit에 설정된 메소드가 실행 됨-->
+            <form name="TodoForm" ng-submit="add(newTodoTitle)">
+                <div class="input-group">
+                    <!-- 입력값과 앵귤러 모델과의 바인딩 -->
+                    <input type="text" class="form-control" ng-model="newTodoTitle">
+                    <span class="input-group-btn">
+                        <button class="btn btn-success" type="submit">추가</button>
+                    </span>
+                </div>
+            </form>
             
             <ul class="list-unstyled">
-                <!-- ng-repeat에 filter를 걸 수 있다. -->
-                <!-- 필터는 filter:객체 형식으로 적용 가능하며, 변수(statusFilter)를 이용하는 것도 가능하다.-->
                 <li ng-repeat="todo in todos | filter:statusFilter">
                     <div class="input-group">
                         <span class="input-group-addon">
@@ -30,7 +39,6 @@
                 </li>
             </ul>
 
-            <!-- 클릭 되었을 때, 해당하는 필터가 적용되도록 변수에 필터 조건 정의 -->
             <button class="btn btn-primary" ng-click="statusFilter={completed: true}">Completed</button>
             <button class="btn btn-primary" ng-click="statusFilter={completed: false}">Active</button>
             <button class="btn btn-primary" ng-click="statusFilter={}">All</button>
