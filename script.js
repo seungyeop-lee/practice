@@ -33,7 +33,19 @@
         };
 
         $scope.add = function(newTodoTitle) {
-            alert(newTodoTitle);
-        }
+            // 새로운 todo를 생성
+            var newTodo = {
+                title: newTodoTitle,
+                completed: false,
+                createdAt: Date.now()
+            };
+
+            // todos에 추가
+            $scope.todos.push(newTodo);
+
+            // input태그 비워 줌
+            // 쌍 방향 바인딩이므로 해당 필드와 연결되어 있는 변수를 비워 줌으로서 태그를 비우는 것이 가능하다.
+            $scope.newTodoTitle = "";
+        };
     });
 })();

@@ -13,11 +13,9 @@
 
             <h1>Todo 목록</h1>
 
-            <!-- submit이벤트 발생 시, ng-submit에 설정된 메소드가 실행 됨-->
             <form name="TodoForm" ng-submit="add(newTodoTitle)">
                 <div class="input-group">
-                    <!-- 입력값과 앵귤러 모델과의 바인딩 -->
-                    <input type="text" class="form-control" ng-model="newTodoTitle">
+                    <input type="text" class="form-control" ng-model="newTodoTitle" placeholder="새로운 Todo를 입력하세요..." autofocus>
                     <span class="input-group-btn">
                         <button class="btn btn-success" type="submit">추가</button>
                     </span>
