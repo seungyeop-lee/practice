@@ -46,10 +46,3 @@ app.controller('TodoCtrl', function($scope) {
         $scope.newTodoTitle = "";
     };
 });
-
-//directive로 설정 할 경우, html에서 태그로 사용 가능
-app.directive('todoTitle', function() {
-    return {
-        template: '<h1>Todo 목록</h1>'
-    };
-});
