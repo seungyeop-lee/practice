@@ -2,11 +2,11 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Welcome</title>
+    <title><g:message code="welcome.title"/></title>
 </head>
 
 <body>
-    <h2>Welcome to Court Reservation System</h2>
+    <h2><g:message code="welcome.message"/></h2>
     %{-- ${}을 사용하여 컨트롤러에서 넘겨준 데이터에 접근가능 --}%
     Today is <g:formatDate format="yyyy-MM-dd" date="${today}"/>
 </body>
