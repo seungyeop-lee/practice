@@ -1,12 +1,13 @@
 <!DOCTYPE html>
-<html>
+<html ng-app>
 <head>
     <meta charset="UTF-8">
     <title>TODO App Demo</title>
     <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.0.3/css/bootstrap.css'/>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.7.8/angular.js'></script>
 </head>
-<body class="well">
-    <h1>AngularJS TODO App</h1>
+<body class="well" ng-init="appName = 'AngularJS TODO APP' ">
+    <h1>{{appName}}</h1>
 
     <p>전체 할 일 <strong>2</strong>개 / 남은 할 일은 <strong>1</strong>개 [ <a href="">보관하기</a> ]</p>
 
