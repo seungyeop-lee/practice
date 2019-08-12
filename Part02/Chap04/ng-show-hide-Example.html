@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en" ng-app>
+<head>
+  <meta charset="UTF-8">
+  <script src='https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.7.8/angular.js'></script>
+  <title>ng-show / ng-hide Example</title>
+</head>
+<body>
+  동의 여부 : <input type="checkbox" ng-model="checked">
+  <br />
+  <div>
+    <span ng-show="checked">
+      다음으로 진행합니다. <button>계속</button>
+    </span>
+  </div>
+  <div>
+    <span ng-hide="checked">
+      다음으로 진행할 수 없습니다.
+    </span>
+  </div>
+</body>
+</html>
