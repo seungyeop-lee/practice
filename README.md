@@ -9,4 +9,5 @@
 
 ## 실습 환경
 
-- IDE: Visual Studio Code
+- IDE: IntelliJ Ultimate
+    - Version: 2019.2
