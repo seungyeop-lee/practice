@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en" ng-app>
+<head>
+  <meta charset="UTF-8">
+  <script src='https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.7.8/angular.js'></script>
+  <title>input tag(checkbox type) Example</title>
+</head>
+<body>
+  <form name="sampleForm" ng-init="value1 = true; value2 = '좋다';">
+    선택 1: <input type="checkbox" name="check1" ng-model="value1">
+    <br/>
+    선택 2: <input type="checkbox" name="check2" ng-model="value2" ng-true-value="'좋다'" ng-false-value="'싫다'">
+    <p>선택1의 바인딩된 값: {{value1}}</p>
+    <p>선택2의 바인딩된 값: {{value2}}</p>
+  </form>
+</body>
+</html>
