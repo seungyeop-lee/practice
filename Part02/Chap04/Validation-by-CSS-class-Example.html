@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en" ng-app>
+<head>
+  <meta charset="UTF-8">
+  <script src='https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.7.8/angular.js'></script>
+  <title>Validation by CSS class Example</title>
+  <style type="text/css">
+    .ng-invalid { /*유효검 검사 미통과*/
+      border: 3px solid red;
+    }
+    .ng-valid { /*유효검 검사 통과*/
+      border: 3px solid green;
+    }
+    .ng-pristine {  /*input에 값이 입력된 적이 없음*/
+      border-style: solid;
+    }
+    .ng-dirty { /*input에 값이 입력된 적이 있음*/
+      border-style: dashed;
+    }
+  </style>
+</head>
+<body>
+  <form name="sampleForm" ng-init="name = '철수'">
+    이름: <input type="text" name="name" ng-model="name" ng-maxlength="3" ng-required="true">
+    핸드폰 번호: <input type="text" name="tel" ng-model="tel" ng-pattern="/^\d{3}-\d{3,4}-\d{4}$/">
+  </form>
+</body>
+</html>
