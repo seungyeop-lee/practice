@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="sampleApp">
+<head>
+  <meta charset="UTF-8">
+  <script src='https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.7.8/angular.js'></script>
+  <title>Directive Config Example</title>
+  <script>
+    angular.module('sampleApp', [])
+        .directive('hello', function ($log) {
+            return {
+                name: 'hello',  // 지시자에서 사용하는 scope의 이름, 생략하면 지시자 이름으로 설정
+                priority: 0,  // 높을 수록 우선도가 높다.
+                // terminal: false, // true이면 마지막에 호출된다.
+                template: '<div></div>',
+                // templateUrl: 'directive.html',
+                replace: false, // HTML 요소의 교체 유무 설정, false면 내부 내용만 바뀐다.
+                transclude: false,  // HTML 요소 내부내용의 컴파일 유무, 'element'를 설정 하면 요소에 적용된 다른 지시자까지 모두 컴파일 대상이 된다.
+                restrict: 'A',  // 지시자가 호출되는 방식설정, 생략하면 모든 방법 사용가능 (E: 요소명호출, A: 속성호출, C: 클래스호출, M: 코멘트호출)
+                scope: false, // true: 새로운 scope생성, false: 부모 DOM의 scope 사용, 객체: 객체의 설정 값을 기반으로 새로운 scope생성
+                // require: 'ngModel',
+                controller: function($scope, $element, $attrs, $transclude) {},
+                compile: function compile(tElement, tAttr) {  // 컴파일 함수를 정의
+                    return {
+                        pre: function preLink(scope, iElement, iAttrs, controller) {},
+                        post: function postLink(scope, iElement, iAttrs, controller) {
+                            $log.log("<h1>hello " + iAttrs.name + "</h1>");
+                            iElement.html("<h1>hello " + iAttrs.name + "</h1>");
+                        },
+                    };
+                    /* 또는
+                     return function postLink(scope, iElement, iAttrs, controller, transcludeFn) {} */
+                },
+                /* 또는
+                link: {
+                    pre: function preLink(scope, iElement, iAttrs, controller, transcludeFn) {},
+                    post: function postLink(scope, iElement, iAttrs, controller, transcludeFn) {},
+                }, */
+                /* 또는
+                link: function postLink(scope, iElement, iAttrs, controller) {}, */
+            };
+        });
+  </script>
+</head>
+<body>
+  <div hello name="angularJS"></div>
+</body>
+</html>
