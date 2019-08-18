@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="sampleApp">
+<head>
+  <meta charset="UTF-8">
+  <script src='https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.7.8/angular.js'></script>
+  <title>Directive Individual Scope Using '&' Example</title>
+  <script>
+    angular.module('sampleApp', [])
+        .controller('demoCtrl', ['$scope', function($scope) {
+            $scope.helloList = [{name: 'google'}, {name: 'naver'}, {name: 'angular'}];
+            $scope.sendMessage = function(toSb) {
+                console.log(toSb + "에게 메시지를 보낸다.");
+            };
+        }])
+        .directive('hello', function () {
+            return {
+                templateUrl: "template/helloTmpl2.html",
+                restrict: "AE",
+                scope: {
+                    name: "@to",
+                    send: "&",  // & 또는 &연결된DOM속성명을 설정하면 부모 scope의 환경에서 실행 될 수 있는 표현식의 reference를 가져올 수 있다.
+                },
+            };
+        });
+  </script>
+</head>
+<body ng-controller="demoCtrl">
+  <div ng-repeat="helloSb in helloList" hello to="{{helloSb.name}}" send="sendMessage(helloSb.name)"></div>
+</body>
+</html>
