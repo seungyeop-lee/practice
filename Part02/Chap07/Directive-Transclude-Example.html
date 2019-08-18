@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="sampleApp">
+<head>
+  <meta charset="UTF-8">
+  <script src='https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.7.8/angular.js'></script>
+  <title>Directive Transclude Example</title>
+  <style type="text/css">
+    .panel {
+      margin: 10px;
+      -moz-border-radius: 2px;
+      -webkit-border-radius: 2px;
+      border-radius: 2px;
+      border: 1px solid black;
+    }
+    .panel.info .panel-title {
+      background-color: gray;
+      color: white;
+    }
+    .panel.alert .panel-title {
+      background-color: red;
+      color: white;
+    }
+    .panel .panel-title {
+      background-color: black;
+      color: white;
+      padding: 10px;
+    }
+    .panel .panel-content {
+      padding: 10px;
+    }
+  </style>
+  <script>
+    angular.module('sampleApp', [])
+        .controller('demoCtrl', ['$scope', function ($scope) {
+            $scope.noticeList = [{
+                url: "notice/1",
+                text: "공지사항 첫 번째 글입니다.",
+            },{
+                url: "notice/2",
+                text: "공지사항 두 번째 글입니다.",
+            },{
+                url: "notice/3",
+                text: "공지사항 세 번째 글입니다.",
+            }];
+        }])
+        .directive('panel', function () {
+            return {
+                templateUrl: "template/panelTmpl.html",
+                restrict: "AE",
+                transclude: true, // directive 태그 안에 있는 html 구문을 <div ng-transclude></div> 사이에 끼워 넣는다.
+                scope: {
+                    title: "@", // @ 뒤를 생략하면 key 와 동일한 이름의 속성과 바인딩 된다.
+                    type: "@"
+                },
+            };
+        });
+  </script>
+</head>
+<body ng-controller="demoCtrl">
+  <panel title="알림" type="alert">
+    <p>AngularJS는 자바스크립트 웹 애플리케이션을 쉽게 개발하게 도와줍니다.</p>
+  </panel>
+  <panel title="공지사항 목록" type="info">
+    <ul>
+      <li ng-repeat="notice in noticeList">
+        <a href="{{notice.url}}">{{notice.text}}</a>
+      </li>
+    </ul>
+  </panel>
+</body>
+</html>
