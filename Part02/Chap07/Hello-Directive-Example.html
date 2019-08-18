@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="sampleApp">
+<head>
+  <meta charset="UTF-8">
+  <script src='https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.7.8/angular.js'></script>
+  <title>Hello Directive Example</title>
+  <script>
+    angular.module('sampleApp', [])
+        .directive('hello', function ($log) {
+            return function (scope, iElement, iAttrs, controller) {
+                $log.log("<h1>hello " + iAttrs.name + "</h1>");
+                iElement.html("<h1>hello " + iAttrs.name + "</h1>");
+            }
+        });
+  </script>
+</head>
+<body>
+  <div hello name="angularJS"></div>
+</body>
+</html>
