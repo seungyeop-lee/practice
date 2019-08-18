@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en" ng-app>
+<head>
+  <meta charset="UTF-8">
+  <script src='https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.7.8/angular.js'></script>
+  <title>ng-class Example</title>
+  <style type="text/css">
+    .apple {
+      background-color: red;
+    }
+    .lemon {
+      background-color: yellow;
+    }
+    .even {
+      background-color: blue;
+    }
+  </style>
+</head>
+<body>
+<div ng-init="fruitList = ['apple', 'banana', 'tomato', 'lemon', 'grape']">
+  <ul>
+    <li ng-repeat="fruit in fruitList" ng-class="'{{fruit}}'">{{fruit}}</li>
+  </ul>
+  <ul>
+    <li ng-repeat="fruit in fruitList" ng-class="{'even':{{$index % 2 == 0}}}">{{fruit}}</li>
+  </ul>
+</div>
+
+</body>
+</html>
