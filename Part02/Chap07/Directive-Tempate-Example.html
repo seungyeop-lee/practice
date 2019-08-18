@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="sampleApp">
+<head>
+  <meta charset="UTF-8">
+  <script src='https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.7.8/angular.js'></script>
+  <title>Directive Template Example</title>
+  <script>
+    angular.module('sampleApp', [])
+        .directive('hello', function () {
+            return {
+                // template: "<h1>hello <span>name</span></h1>",
+                templateUrl: "template/helloTmpl.html",
+                restrict: "AE",
+                controller: function($scope, $element, $attrs, $transclude) {
+                    $scope.name = $attrs.name;
+                },
+                /* 또는 (DOM 조작은 controller 에서 행하는것을 추천한다.)
+                link: function link(scope, iEl, iAt, ctrl) {
+                    scope.name = iAt.name;
+                }, */
+            };
+        })
+  </script>
+</head>
+<body>
+  <div hello name="angularJS"></div>
+</body>
+</html>
