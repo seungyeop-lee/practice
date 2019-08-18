@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="sampleApp">
+<head>
+  <meta charset="UTF-8">
+  <script src='https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.7.8/angular.js'></script>
+  <title>Directive Individual Scope Example</title>
+  <script>
+    angular.module('sampleApp', [])
+        .controller('demoCtrl', ['$scope', function($scope) {
+            $scope.name = "Ctrl에서 사용된 name 모델";
+            $scope.helloList = [{name: 'google'}, {name: 'naver'}, {name: 'angular'}];
+        }])
+        .directive('hello', function () {
+            return {
+                templateUrl: "template/helloTmpl.html",
+                restrict: "AE",
+                scope: {
+                    name: "@to" //to 속성 값을 name에 대입시킨다.
+                },
+            };
+        });
+  </script>
+</head>
+<body ng-controller="demoCtrl">
+  <div ng-repeat="helloSb in helloList" hello to="{{helloSb.name}}"></div>
+</body>
+</html>
