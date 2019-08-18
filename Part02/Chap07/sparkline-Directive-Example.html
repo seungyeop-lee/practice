@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="sampleApp">
+<head>
+  <meta charset="UTF-8">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.12.4/jquery.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-sparklines/2.1.2/jquery.sparkline.js"></script>
+  <script src='https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.7.8/angular.js'></script>
+  <title>sparkline Directive Example</title>
+  <script>
+    angular.module('sampleApp', [])
+        .controller('sampleCtrl', function ($scope) {
+            $scope.chartData1 = [1, 22, 4, 2, 12, 3];
+            $scope.chartData2 = [3, 4, 2, 10, 3, 4, 11];
+        })
+        .directive('ngSparkline', [function () {
+            return {
+                restrict: 'EA',
+                scope: {
+                    chartData: '=',
+                },
+                link: function (scope, iElement, iAttrs) {
+                    var options = {
+                        type: iAttrs.chartType || 'line',
+                    };
+                    jQuery(iElement).sparkline(scope.chartData, options);
+                },
+            };
+        }])
+  </script>
+</head>
+<body ng-controller="sampleCtrl">
+  <ng-sparkline chart-data="chartData1" chart-type="bar"></ng-sparkline>
+  <div ng-sparkline chart-data="chartData2"></div>
+</body>
+</html>
