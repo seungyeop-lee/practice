@@ -11,3 +11,15 @@ assert log == '12345678910'
 log = ''
 (1..10).each { log += it }
 assert log == '12345678910'
+
+// 클로저를 변수에 직접 할당
+def printer = { line ->
+    println line
+}
+
+// 클로저를 반환하는 메소드
+def Closure getPrinter() {
+    return { line ->
+        println line
+    }
+}
