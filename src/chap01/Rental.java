@@ -4,9 +4,9 @@ public class Rental {
     private Movie _movie;
     private int _dayRented;
 
-    public Rental(Movie _movie, int _dayRented) {
-        this._movie = _movie;
-        this._dayRented = _dayRented;
+    public Rental(Movie movie, int dayRented) {
+        this._movie = movie;
+        this._dayRented = dayRented;
     }
 
     public Movie getMovie() {
