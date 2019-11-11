@@ -12,19 +12,24 @@ public class Customer {
         this._name = _name;
     }
 
-    void printOwing() {
-        Enumeration<Order> e = _orders.elements();
-        double outstanding = 0.0;
-
+    void printOwing(double previousAmount) {
+        double outstanding = previousAmount * 1.2;
         printBanner();
+        outstanding = getOutstanding(outstanding);
 
+        printDetails(outstanding);
+
+    }
+
+    private double getOutstanding(double initialValue) {
+        Enumeration<Order> e = _orders.elements();
+        double result = initialValue;
         // 외상액 계산
         while (e.hasMoreElements()) {
             Order each = e.nextElement();
-            outstanding += each.getAmount();
+            result += each.getAmount();
         }
-        printDetails(outstanding);
-
+        return result;
     }
 
     void printDetails(double outstanding) {

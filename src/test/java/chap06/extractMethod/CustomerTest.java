@@ -23,6 +23,6 @@ public class CustomerTest {
 
     @Test
     public void printOwing() {
-        customer.printOwing();
+        customer.printOwing(10.0);
     }
 }
