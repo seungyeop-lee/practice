@@ -5,6 +5,12 @@ import (
 	"github.com/seungyeop-lee/bookstore_users-api/datasources/mysql/users_db"
 	"github.com/seungyeop-lee/bookstore_users-api/utils/date_utils"
 	"github.com/seungyeop-lee/bookstore_users-api/utils/errors"
+	"strings"
+)
+
+const (
+	indexUniqueEmail = "users_email_uindex"
+	queryInsertUser = "INSERT INTO users(first_name, last_name, email, date_created) VALUES(?, ?, ?, ?);"
 )
 
 var (
@@ -31,16 +37,32 @@ func (user *User) Get() *errors.RestErr {
 }
 
 func (user *User) Save() *errors.RestErr {
-	current := usersDB[user.Id]
-	if current != nil {
-		if current.Email == user.Email {
-			return errors.NewBadRequestError(fmt.Sprintf("email %s already registered", user.Email))
-		}
-		return errors.NewBadRequestError(fmt.Sprintf("user %d already exists", user.Id))
+	stmt, err := users_db.Client.Prepare(queryInsertUser)
+	if err != nil {
+		return errors.NewInternalServerError(err.Error())
 	}
+	// defer를 사용하여 메소드가 끝나면 stmt를 닫아줘야된다. (memory leak 발생!)
+	defer stmt.Close()
 
 	user.DateCreated = date_utils.GetNowString()
 
-	usersDB[user.Id] = user
+	insertResult, err := stmt.Exec(user.FirstName, user.LastName, user.Email, user.DateCreated)
+	if err != nil {
+		if strings.Contains(err.Error(), indexUniqueEmail) {
+			return errors.NewBadRequestError(
+				fmt.Sprintf("email %s already exists", user.Email))
+		}
+		return errors.NewInternalServerError(
+			fmt.Sprintf("error when trying to save user: %s", err.Error()))
+	}
+
+	// Prepare과 Exec을 동시에 실행하는 것도 가능
+	//result, err := users_db.Client.Exec(queryInsertUser, user.FirstName, user.LastName, user.Email, user.DateCreated)
+
+	userId, err := insertResult.LastInsertId()
+	if err != nil {
+		return errors.NewInternalServerError(fmt.Sprintf("error when trying to save user: %s", err.Error()))
+	}
+	user.Id = userId
 	return nil
 }
