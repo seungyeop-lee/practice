@@ -90,3 +90,14 @@ func Delete(c *gin.Context) {
 	// 이 경우 에러를 json형태로 사용했기 때문에 반환 할 정보가 적더라도 json으로 보내주는 것이 맞다.
 	c.JSON(http.StatusOK, map[string]string{"status": "deleted"})
 }
+
+func Search(c *gin.Context) {
+	status := c.Query("status")
+
+	users, err := services.Search(status)
+	if err != nil {
+		c.JSON(err.Status, err)
+		return
+	}
+	c.JSON(http.StatusOK, users)
+}
