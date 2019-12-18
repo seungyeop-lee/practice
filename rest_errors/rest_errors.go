@@ -43,3 +43,15 @@ func NewInternalServerError(message string, err error) *RestErr {
 	}
 	return result
 }
+
+func NewRestError(message string, status int, error string, causes error) *RestErr {
+	result := &RestErr{
+		Message: message,
+		Status: status,
+		Error: error,
+	}
+	if causes != nil {
+		result.Causes = append(result.Causes, causes.Error())
+	}
+	return result
+}
