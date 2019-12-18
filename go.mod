@@ -3,6 +3,8 @@ module github.com/seungyeop-lee/bookstore_oauth-api
 go 1.13
 
 require (
+	github.com/bmizerany/assert v0.0.0-20160611221934-b7ed37b82869
+	github.com/federicoleon/golang-restclient v0.0.0-20191104170228-162ed620df66
 	github.com/gin-gonic/gin v1.5.0
 	github.com/go-playground/universal-translator v0.17.0 // indirect
 	github.com/gocql/gocql v0.0.0-20191126110522-1982a06ad6b9

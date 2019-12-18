@@ -1,4 +1,4 @@
-create keyspace oauth with replication = {'class':'SimpleStrategy', 'replication_factory': 1};
+create keyspace oauth with replication = {'class':'SimpleStrategy', 'replication_factory':1};
 
 create table access_tokens(
     access_token varchar PRIMARY KEY,
