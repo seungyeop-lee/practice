@@ -58,6 +58,7 @@ github.com/rogpeppe/go-internal v1.3.0/go.mod h1:M8bDsm7K2OlrFYOpmOWEs/qY81heoFR
 github.com/seungyeop-lee/bookstore_oauth-go v0.0.0-20191218065855-889d2891ff8e h1:wNZjH8TR1L5lodVFQ34Xb1l0rwBu48fz3kX+H3nrdXw=
 github.com/seungyeop-lee/bookstore_utils-go v0.0.0-20191218111908-83513f511262 h1:bwIwof9L1Yi/QRC4SCY4oOjsjXOh2rs7TkEkPl2LS/I=
 github.com/seungyeop-lee/bookstore_utils-go v0.0.0-20191218111908-83513f511262/go.mod h1:vv3Yc/u3IYGeBjzHG7M/SSXoiYdYgp9F42qTZNuLfdA=
+github.com/seungyeop-lee/bookstore_utils-go v0.0.0-20191219060437-d11dc8f9bf86 h1:Q6GVelNaJs3fhKvMyeVjLy1dW5FyvrJUDGW0ZLG8d/I=
 github.com/stretchr/objx v0.1.0/go.mod h1:HFkY916IF+rwdDfMAkV7OtwuqBVzrE8GR6GFx+wExME=
 github.com/stretchr/testify v1.3.0/go.mod h1:M5WIy9Dh21IEIfnGCwXGc5bZfKNJtfHm1UVUgZn+9EI=
 github.com/stretchr/testify v1.4.0 h1:2E4SXV/wtOkTonXsotYi4li6zVWxYlZuYNCXe9XRJyk=

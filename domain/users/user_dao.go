@@ -4,8 +4,8 @@ import (
 	"errors"
 	"fmt"
 	"github.com/seungyeop-lee/bookstore_users-api/datasources/mysql/users_db"
-	"github.com/seungyeop-lee/bookstore_users-api/logger"
 	"github.com/seungyeop-lee/bookstore_users-api/utils/mysql_utils"
+	"github.com/seungyeop-lee/bookstore_utils-go/logger"
 	"github.com/seungyeop-lee/bookstore_utils-go/rest_errors"
 	"strings"
 )

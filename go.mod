@@ -12,12 +12,14 @@ require (
 	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
 	github.com/modern-go/reflect2 v1.0.1 // indirect
 	github.com/seungyeop-lee/bookstore_oauth-go v0.0.0
-	github.com/seungyeop-lee/bookstore_utils-go v0.0.0-20191218111908-83513f511262
-	go.uber.org/zap v1.13.0
+	github.com/seungyeop-lee/bookstore_utils-go v0.0.0
 	golang.org/x/sys v0.0.0-20191210023423-ac6580df4449 // indirect
 	google.golang.org/appengine v1.6.5 // indirect
 	gopkg.in/go-playground/validator.v9 v9.30.2 // indirect
 	gopkg.in/yaml.v2 v2.2.7 // indirect
 )
 
-replace github.com/seungyeop-lee/bookstore_oauth-go => ../bookstore_oauth-go
+replace (
+	github.com/seungyeop-lee/bookstore_oauth-go => ../bookstore_oauth-go
+	github.com/seungyeop-lee/bookstore_utils-go => ../bookstore_utils-go
+)
