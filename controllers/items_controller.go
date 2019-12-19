@@ -27,6 +27,12 @@ func (c *itemsController) Create(w http.ResponseWriter, r *http.Request) {
 		http_utils.RespondError(w, *err)
 		return
 	}
+	sellerId := oauth.GetCallerId(r)
+	if sellerId == 0 {
+		respErr := rest_errors.NewUnauthorizedError("invalid request body")
+		http_utils.RespondError(w, *respErr)
+		return
+	}
 
 	requestBody, err := ioutil.ReadAll(r.Body)
 	if err != nil {
@@ -43,10 +49,10 @@ func (c *itemsController) Create(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	itemRequest.Seller = oauth.GetClientId(r)
+	itemRequest.Seller = sellerId
 
 	result, createErr := services.ItemsService.Create(itemRequest)
-	if createErr == nil {
+	if createErr != nil {
 		http_utils.RespondError(w, *createErr)
 		return
 	}
