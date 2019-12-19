@@ -15,12 +15,20 @@ type itemsServiceInterface interface {
 	Get(string) (*items.Item, *rest_errors.RestErr)
 }
 
-type itemsService struct {}
+type itemsService struct{}
 
 func (s *itemsService) Create(item items.Item) (*items.Item, *rest_errors.RestErr) {
-	return nil, rest_errors.NewRestError("implement me!", http.StatusNotImplemented, "not_implemented", nil)
+	return nil, &rest_errors.RestErr{
+		Message: "implement me!",
+		Status:  http.StatusNotImplemented,
+		Error:   "not_implemented",
+	}
 }
 
 func (s *itemsService) Get(string) (*items.Item, *rest_errors.RestErr) {
-	return nil, rest_errors.NewRestError("implement me!", http.StatusNotImplemented, "not_implemented", nil)
+	return nil, &rest_errors.RestErr{
+		Message: "implement me!",
+		Status:  http.StatusNotImplemented,
+		Error:   "not_implemented",
+	}
 }
