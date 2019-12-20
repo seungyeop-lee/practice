@@ -12,6 +12,7 @@ type RestErr interface {
 	Status() int
 	Error() string
 	Causes() []interface{}
+	GetStruct() map[string]interface{}
 }
 
 type restErr struct {
@@ -22,7 +23,7 @@ type restErr struct {
 }
 
 func (e restErr) Error() string {
-	return fmt.Sprintf("message: %s - status %d - error: %s - causes: [ %v ]",
+	return fmt.Sprintf("message: %s - status %d - error: %s - causes: %v",
 		e.message, e.status, e.error, e.causes)
 }
 
@@ -36,6 +37,31 @@ func (e restErr) Causes() []interface{} {
 	return e.causes
 }
 
+func (e restErr) GetStruct() map[string]interface{} {
+	return map[string]interface{}{
+		"Message": e.Message(),
+		"Status": e.Status(),
+		"Error": e.Error(),
+		"Causes": e.Causes(),
+	}
+}
+
+type tempRestErr struct {
+	Message string        `json:"message"`
+	Status  int           `json:"status"`
+	Error   string        `json:"error"`
+	Causes  []interface{} `json:"causes"`
+}
+
+func (e tempRestErr) convertToRestErr() RestErr {
+	return restErr{
+		message: e.Message,
+		status: e.Status,
+		error: e.Error,
+		causes: e.Causes,
+	}
+}
+
 func NewRestError(message string, status int, err string, causes []interface{}) RestErr {
 	return restErr{
 		message: message,
@@ -46,11 +72,11 @@ func NewRestError(message string, status int, err string, causes []interface{}) 
 }
 
 func NewRestErrorFromBytes(bytes []byte) (RestErr, error) {
-	var apiErr restErr
+	var apiErr tempRestErr
 	if err := json.Unmarshal(bytes, &apiErr); err != nil {
 		return nil, errors.New("invalid json")
 	}
-	return apiErr, nil
+	return apiErr.convertToRestErr(), nil
 }
 
 func NewBadRequestError(message string) RestErr {
