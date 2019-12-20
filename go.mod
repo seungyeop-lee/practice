@@ -11,6 +11,7 @@ require (
 	github.com/seungyeop-lee/bookstore_oauth-go v0.0.0
 	github.com/seungyeop-lee/bookstore_utils-go v0.0.0
 	go.uber.org/zap v1.13.0
+	google.golang.org/appengine v1.6.5
 	gopkg.in/yaml.v2 v2.2.7 // indirect
 )
 
