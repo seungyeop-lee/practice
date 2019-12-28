@@ -3,7 +3,10 @@
     "typescript": "^3.7.4"
   },
   "dependencies": {
+    "@types/dotenv": "^8.2.0",
     "@types/faker": "^4.1.8",
+    "@types/node": "^13.1.1",
+    "dotenv": "^8.2.0",
     "faker": "^4.1.0"
   }
 }
