@@ -1,5 +1,6 @@
-import { User } from './User';
-import { Company } from './Company';
+import 'googlemaps';
+// import { User } from './User';
+// import { Company } from './Company';
 import * as dotenv from 'dotenv';
 
 dotenv.config();
@@ -9,10 +10,12 @@ googleMapScript.setAttribute(
   `https://maps.googleapis.com/maps/api/js?key=${process.env.googleMapKey}`
 );
 
-const user = new User();
-
-console.log(user);
-
-const company = new Company();
-
-console.log(company);
+window.onload = () => {
+  new google.maps.Map(document.getElementById('map'), {
+    zoom: 1,
+    center: {
+      lat: 0,
+      lng: 0
+    }
+  });
+};

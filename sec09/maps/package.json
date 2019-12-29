@@ -5,8 +5,10 @@
   "dependencies": {
     "@types/dotenv": "^8.2.0",
     "@types/faker": "^4.1.8",
+    "@types/googlemaps": "^3.39.0",
     "@types/node": "^13.1.1",
     "dotenv": "^8.2.0",
-    "faker": "^4.1.0"
+    "faker": "^4.1.0",
+    "googlemaps": "^1.12.0"
   }
 }
