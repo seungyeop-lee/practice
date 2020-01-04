@@ -110,3 +110,6 @@ public/
 
 ### Parcel Bundling ###
 dist/
+
+### builded js file ###
+build/
