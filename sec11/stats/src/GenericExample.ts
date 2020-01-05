@@ -22,8 +22,12 @@ add(10, 3);
 // holdString.data = 'sdlfkjsd';
 
 // With GENERICS
-class HoldAnything<TypeOfData> {
-  data: TypeOfData | undefined;
+class HoldAnything<T> {
+  data: T | undefined;
+
+  add(a: T): T {
+    return a;
+  }
 }
 
 const holdNumber = new HoldAnything<number>();
