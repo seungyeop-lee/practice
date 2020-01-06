@@ -22,4 +22,5 @@ class ArrayOfAnything<T> {
   }
 }
 
-new ArrayOfAnything<string>(['a', 'b', 'c']);
+// Generic을 생략해도 추정해준다.
+const arr = new ArrayOfAnything(['a', 'b', 'c']);
