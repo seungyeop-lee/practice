@@ -12,6 +12,15 @@ message SumResponse {
     int64 result = 1;
 }
 
+message DecomposeRequest {
+    int64 number = 1;
+}
+
+message DecomposeResponse {
+    int64 prime_factor = 1;
+}
+
 service CalService {
     rpc Sum (SumRequest) returns (SumResponse) {};
+    rpc Decompose (DecomposeRequest) returns (stream DecomposeResponse) {};
 }
