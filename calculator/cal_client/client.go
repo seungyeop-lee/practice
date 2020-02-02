@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"google.golang.org/grpc"
 	"grpc-hands-on/calculator/calculatorpb"
 	"io"
@@ -18,7 +19,8 @@ func main() {
 	c := calculatorpb.NewCalServiceClient(cc)
 
 	//doSum(c)
-	doDecompose(c)
+	//doDecompose(c)
+	doClientStreaming(c)
 }
 
 func doSum(c calculatorpb.CalServiceClient) {
@@ -53,4 +55,28 @@ func doDecompose(c calculatorpb.CalServiceClient) {
 		}
 		log.Println(res.PrimeFactor)
 	}
+}
+
+func doClientStreaming(c calculatorpb.CalServiceClient) {
+	stream, err := c.ComputeAverage(context.Background())
+	if err != nil {
+		log.Fatalf("error while opening stream: %v", err)
+	}
+
+	numbers := []int32{3, 5, 9, 54, 23}
+
+	for _, number := range numbers {
+		fmt.Printf("Sending number: %v\n", number)
+		stream.Send(&calculatorpb.ComputeAverageRequest{
+			Number: number,
+		})
+	}
+
+	res, err := stream.CloseAndRecv()
+	if err != nil {
+		log.Fatalf("Error while receiving response: %v", err)
+	}
+
+	fmt.Printf("The Average is: %v", res.GetAverage())
+
 }
