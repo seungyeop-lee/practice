@@ -1,0 +1,11 @@
+version: "3.2"
+services:
+  mongodb:
+    image: mongo:4-bionic
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: test
+    volumes:
+      - "./docker-data/db:/data/db"
+    ports:
+      - "27017:27017"
