@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/reflection"
 	"google.golang.org/grpc/status"
 	"grpc-hands-on/calculator/calculatorpb"
 	"io"
@@ -118,6 +119,9 @@ func main() {
 
 	s := grpc.NewServer()
 	calculatorpb.RegisterCalServiceServer(s, &server{})
+
+	// Register reflection service on gRPC server.
+	reflection.Register(s)
 
 	fmt.Println("Start to listen")
 	if err := s.Serve(lis); err != nil {
