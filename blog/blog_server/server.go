@@ -30,6 +30,7 @@ type blogItem struct {
 }
 
 func (*server) CreateBlog(ctx context.Context, req *blogpb.CreateBlogRequest) (*blogpb.CreateBlogResponse, error) {
+	fmt.Println("Create blog request")
 	blog := req.GetBlog()
 
 	data := blogItem{
@@ -71,7 +72,7 @@ func main() {
 	fmt.Println("Connecting to mongoDB")
 
 	// connect to database
-	client, err := mongo.NewClient(options.Client().ApplyURI("mongodb://localhost:27017"))
+	client, err := mongo.NewClient(options.Client().ApplyURI("mongodb://root:test@localhost:27017"))
 	if err != nil {
 		log.Fatal(err)
 	}
