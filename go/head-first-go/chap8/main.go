@@ -1,34 +1,35 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
 
-type Liters float64
-type Milliliters float64
-type Gallons float64
+	"github.com/seungyeop-lee/practice/go/head-first-go/chap7/magazine"
+)
 
-func (l Liters) ToGallons() Gallons {
-	return Gallons(l * 0.264)
-}
-
-func (m Milliliters) ToGallons() Gallons {
-	return Gallons(m * 0.000264)
-}
-
-func (g Gallons) ToLiters() Liters {
-	return Liters(g * 3.785)
-}
-
-func (g Gallons) ToMilliliters() Milliliters {
-	return Milliliters(g * 3785.41)
+type subscriber struct {
+	name   string
+	rate   float64
+	active bool
 }
 
 func main() {
-	soda := Liters(2)
-	fmt.Printf("%0.3f liters equals %0.3f gallons\n", soda, soda.ToGallons())
-	water := Milliliters(500)
-	fmt.Printf("%0.3f milliliters equals %0.3f gallons\n", water, water.ToGallons())
+	subscriber := magazine.Subscriber{Name: "Aman Singh"}
+	subscriber.Street = "123 Oak St"
+	subscriber.City = "Omaha"
+	subscriber.State = "NE"
+	subscriber.PostalCode = "68111"
+	fmt.Println("Street:", subscriber.Street)
+	fmt.Println("City:", subscriber.City)
+	fmt.Println("State:", subscriber.State)
+	fmt.Println("Postal Code:", subscriber.PostalCode)
 
-	milk := Gallons(2)
-	fmt.Printf("%0.3f gallons equals %0.3f liters\n", milk, milk.ToLiters())
-	fmt.Printf("%0.3f gallons equals %0.3f milliliters\n", milk, milk.ToMilliliters())
+	employee := magazine.Employee{Name: "Joy Carr"}
+	employee.Street = "456 Elm St"
+	employee.City = "Portland"
+	employee.State = "OR"
+	employee.PostalCode = "97222"
+	fmt.Println("Street:", employee.Street)
+	fmt.Println("City:", employee.City)
+	fmt.Println("State:", employee.State)
+	fmt.Println("Postal Code:", employee.PostalCode)
 }

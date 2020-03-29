@@ -1,35 +1,34 @@
 package main
 
-import (
-	"fmt"
-	"log"
+import "fmt"
 
-	"github.com/seungyeop-lee/practice/go/head-first-go/chap9/calendar"
-)
+type Liters float64
+type Milliliters float64
+type Gallons float64
+
+func (l Liters) ToGallons() Gallons {
+	return Gallons(l * 0.264)
+}
+
+func (m Milliliters) ToGallons() Gallons {
+	return Gallons(m * 0.000264)
+}
+
+func (g Gallons) ToLiters() Liters {
+	return Liters(g * 3.785)
+}
+
+func (g Gallons) ToMilliliters() Milliliters {
+	return Milliliters(g * 3785.41)
+}
 
 func main() {
-	event := calendar.Event{}
-	err := event.SetTitle("Mom's birthday")
-	if err != nil {
-		log.Fatal(err)
-	}
+	soda := Liters(2)
+	fmt.Printf("%0.3f liters equals %0.3f gallons\n", soda, soda.ToGallons())
+	water := Milliliters(500)
+	fmt.Printf("%0.3f milliliters equals %0.3f gallons\n", water, water.ToGallons())
 
-	err = event.SetYear(2019)
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	err = event.SetMonth(5)
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	err = event.SetDay(27)
-	if err != nil {
-		log.Fatal(err)
-	}
-	fmt.Println(event.Title())
-	fmt.Println(event.Year())
-	fmt.Println(event.Month())
-	fmt.Println(event.Day())
+	milk := Gallons(2)
+	fmt.Printf("%0.3f gallons equals %0.3f liters\n", milk, milk.ToLiters())
+	fmt.Printf("%0.3f gallons equals %0.3f milliliters\n", milk, milk.ToMilliliters())
 }
