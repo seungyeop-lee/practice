@@ -24,6 +24,18 @@
             {{ even }}
           </li>
         </div>
+        <!-- *ngIf는 실제로 아래와 같이 쓴것과 동일하게 동작한다.  -->
+        <ng-template [ngIf]="!onlyOdd">
+          <div>
+            <li
+              class="list-group-item"
+              [ngClass]="{odd: even % 2 !== 0}"
+              [ngStyle]="{backgroundColor: even % 2 !== 0 ? 'yellow' : 'transparent'}"
+              *ngFor="let even of evenNumbers">
+              {{ even }}
+            </li>
+          </div>
+        </ng-template>
       </ul>
       <p appBasicHighlight>Style me with basic directive!</p>
       <p [appBetterHighlight]="'red'" defaultColor="yellow">Style me with a better directive!</p>
