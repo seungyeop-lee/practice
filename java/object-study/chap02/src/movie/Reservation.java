@@ -1,3 +1,7 @@
+package movie;
+
+import money.Money;
+
 public class Reservation {
     private Customer customer;
     private Screening screening;

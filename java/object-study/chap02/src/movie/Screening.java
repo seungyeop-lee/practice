@@ -1,3 +1,7 @@
+package movie;
+
+import money.Money;
+
 import java.time.LocalDateTime;
 
 public class Screening {
