@@ -48,4 +48,9 @@ public class GradeLecture extends Lecture {
                 .average()
                 .orElse(0);
     }
+
+    @Override
+    protected String getEvaluationMethod() {
+        return "Grade";
+    }
 }
