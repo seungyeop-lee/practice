@@ -26,7 +26,7 @@ public class Lecture {
     }
 
     public String evaluate() {
-        return String.format("Pass:%d Fail: %d", passCount(), failCount());
+        return String.format("Pass:%d Fail:%d", passCount(), failCount());
     }
 
     private long passCount() {
