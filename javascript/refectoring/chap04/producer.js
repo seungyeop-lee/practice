@@ -9,7 +9,6 @@ export class Producer {
     get cost() {
         return this._cost;
     }
-
     set cost(arg) {
         this._cost = parseInt(arg);
     }
@@ -21,7 +20,6 @@ export class Producer {
     get production() {
         return this._production;
     }
-
     set production(amountStr) {
         const amount = parseInt(amountStr);
         const newProduction = Number.isNaN(amount) ? 0 : amount;
