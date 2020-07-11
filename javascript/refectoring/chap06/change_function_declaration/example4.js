@@ -1,7 +1,5 @@
-function inNewEngland(aCustomer) {
-    return ['MA', 'CT', 'ME', 'VT', 'NG', 'RI'].includes(
-        aCustomer.address.state
-    );
+function inNewEngland(stateCode) {
+    ['MA', 'CT', 'ME', 'VT', 'NG', 'RI'].includes(stateCode);
 }
 
 let someCustomers = [];
