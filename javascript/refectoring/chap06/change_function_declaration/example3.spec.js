@@ -10,4 +10,8 @@ describe('Book', function () {
         book.addReservation('new customer');
         expect(book._reservations).contains('new customer');
     });
+    it('zz_addReservation', function () {
+        book.zz_addReservation('new customer', true);
+        expect(book._reservations).contains('new customer');
+    });
 });
