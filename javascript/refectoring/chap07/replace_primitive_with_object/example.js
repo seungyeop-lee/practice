@@ -1,8 +1,25 @@
 import { assert } from 'chai';
 
-export class Order {
+class Priority {
+    constructor(value) {
+        this._value = value;
+    }
+    toString() {
+        return this._value;
+    }
+}
+
+class Order {
     constructor(data) {
-        this.priority = data.priority;
+        this._priority = data.priority;
+    }
+
+    get priorityString() {
+        return this._priority.toString();
+    }
+
+    set priority(aString) {
+        this._priority = new Priority(aString);
     }
 }
 
@@ -10,14 +27,14 @@ describe('', function () {
     let orders;
     beforeEach(function () {
         orders = [
-            new Order({ priority: 'high' }),
-            new Order({ priority: 'rush' }),
-            new Order({ priority: 'low' }),
+            new Order({ priority: new Priority('high') }),
+            new Order({ priority: new Priority('rush') }),
+            new Order({ priority: new Priority('low') }),
         ];
     });
     it('', function () {
         const highPriorityCount = orders.filter(
-            (o) => 'high' === o.priority || 'rush' === o.priority
+            (o) => 'high' === o.priorityString || 'rush' === o.priorityString
         ).length;
 
         assert.equal(highPriorityCount, 2);
