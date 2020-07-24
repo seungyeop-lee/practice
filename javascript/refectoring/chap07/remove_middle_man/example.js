@@ -1,11 +1,11 @@
 import { assert } from 'chai';
 
 class Person {
+    get department() {
+        return this._department;
+    }
     set department(arg) {
         this._department = arg;
-    }
-    get manager() {
-        return this._department.manager;
     }
 }
 
@@ -27,7 +27,7 @@ describe('', function () {
         aPerson.department = department;
     });
     it('', function () {
-        let manager = aPerson.manager;
+        let manager = aPerson.department.manager;
         assert.equal(manager, 'test manager');
     });
 });
