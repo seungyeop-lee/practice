@@ -1,7 +1,7 @@
 import { assert } from 'chai';
 
-class TrackingInformation {
-    get display() {
+class Shipment {
+    get trackingInfo() {
         return `${this.shippingCompany}: ${this.trackingNumber}`;
     }
 
@@ -22,33 +22,19 @@ class TrackingInformation {
     }
 }
 
-class Shipment {
-    get trackingInfo() {
-        return this._trackingInformation.display;
-    }
-    get trackingInformation() {
-        return this._trackingInformation;
-    }
-    set trackingInformation(aTrackingInformation) {
-        this._trackingInformation = aTrackingInformation;
-    }
-}
-
 describe('Shipment', function () {
     let aShipment;
     beforeEach(function () {
-        let trackingInfo = new TrackingInformation();
-        trackingInfo.shippingCompany = 'test company';
-        trackingInfo.trackingNumber = '12345-abcde-00000';
         aShipment = new Shipment();
-        aShipment.trackingInformation = trackingInfo;
+        aShipment.shippingCompany = 'test company';
+        aShipment.trackingNumber = '12345-abcde-00000';
     });
     it('normal', function () {
         assert.equal(aShipment.trackingInfo, 'test company: 12345-abcde-00000');
     });
     it('change shippingCompany', function () {
         let request = { vendor: 'test vendor' };
-        aShipment.trackingInformation.shippingCompany = request.vendor;
+        aShipment.shippingCompany = request.vendor;
         assert.equal(aShipment.trackingInfo, 'test vendor: 12345-abcde-00000');
     });
 });
