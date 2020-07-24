@@ -17,7 +17,7 @@ describe('', function () {
             .length;
 
         for (const name of readBasicCourseNames()) {
-            aPerson.courses.push(new Course(name, false));
+            aPerson.addCourse(new Course(name, false));
         }
 
         assert.equal(aPerson.courses.length, 3);
