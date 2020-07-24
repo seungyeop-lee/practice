@@ -13,6 +13,9 @@ class Person {
     set department(arg) {
         this._department = arg;
     }
+    get manager() {
+        return this._department.manager;
+    }
 }
 
 class Department {
@@ -40,7 +43,7 @@ describe('', function () {
         aPerson.department = department;
     });
     it('', function () {
-        let manager = aPerson.department.manager;
+        let manager = aPerson.manager;
         assert.equal(manager, 'test manager');
     });
 });
