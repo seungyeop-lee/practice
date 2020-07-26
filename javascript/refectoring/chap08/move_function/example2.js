@@ -10,9 +10,13 @@ class Account {
     get bankCharge() {
         let result = 4.5;
         if (this._daysOverdrawn > 0) {
-            result += this.type.overdraftCharge(this.daysOverdrawn);
+            result += this.overdraftCharge;
         }
         return result;
+    }
+
+    get overdraftCharge() {
+        return this.type.overdraftCharge(this);
     }
 
     get daysOverdrawn() {
@@ -34,16 +38,16 @@ class AccountType {
     }
 
     // 초과 인출 이자 계산
-    overdraftCharge(daysOverdrawn) {
+    overdraftCharge(account) {
         if (this.isPremium) {
             const baseCharge = 10;
-            if (daysOverdrawn <= 7) {
+            if (account.daysOverdrawn <= 7) {
                 return baseCharge;
             } else {
-                return baseCharge + (daysOverdrawn - 7) * 0.85;
+                return baseCharge + (account.daysOverdrawn - 7) * 0.85;
             }
         } else {
-            return daysOverdrawn * 1.75;
+            return account.daysOverdrawn * 1.75;
         }
     }
 }
