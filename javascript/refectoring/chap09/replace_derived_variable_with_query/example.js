@@ -2,17 +2,20 @@ import { assert } from 'chai';
 
 class ProductionPlan {
     constructor(production) {
-        this._production = production;
+        this._initialProduction = production;
         this._adjustments = [];
     }
 
     get production() {
-        return this._production;
+        return this._initialProduction + this.calculateProductionAccumulator;
+    }
+
+    get calculateProductionAccumulator() {
+        return this._adjustments.reduce((sum, a) => sum + a.amount, 0);
     }
 
     applyAdjustment(anAdjustment) {
         this._adjustments.push(anAdjustment);
-        this._production += anAdjustment.amount;
     }
 }
 
