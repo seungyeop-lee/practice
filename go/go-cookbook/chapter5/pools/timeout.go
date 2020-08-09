@@ -13,8 +13,8 @@ func ExecWithTimeout() error {
 
 	ctx := context.Background()
 
-	ctx, _ = context.WithDeadline(ctx, time.Now())
-	context.WithTimeout()
+	ctx, can := context.WithDeadline(ctx, time.Now())
+	defer can()
 
 	_, err = db.BeginTx(ctx, nil)
 	return err
